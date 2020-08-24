@@ -40,6 +40,7 @@ main {
 .sidebar {
 
     height: 100%;
+    width: 130px !important;
     border-radius: 20px;
     border: 5px solid lightblue;
     box-shadow: 10px 10px lightblue;
@@ -94,7 +95,8 @@ main {
 }
 
 /* Style the accordion panel. Note: hidden by default */
-.panel {
+.panel,
+.panel-list {
     background-color: white;
     overflow: hidden;
     color: lightblue;
@@ -107,7 +109,8 @@ main {
     transition: .5s;
 }
 
-.panel>* {
+.panel>*,
+.panel-list>* {
     margin-right: 5px;
 }
 
@@ -161,7 +164,7 @@ main {
 
 .task-name {
 
-    margin: auto 100px;
+    margin: auto 10%;
     overflow: hidden;
 }
 
@@ -174,6 +177,15 @@ main {
 
 
 /* Responsiveness*/
+@media (max-width: 1400px) {
+
+
+    .todo-content {
+
+        width: 80%;
+    }
+
+}
 
 
 @media (max-width: 1200px) {
@@ -181,7 +193,7 @@ main {
 
     .todo-content {
 
-        width: 77%;
+        width: 75%;
     }
 
 }
@@ -192,7 +204,7 @@ main {
 
     .todo-content {
 
-        width: 67%;
+        width: 65%;
     }
 
 }
@@ -200,8 +212,22 @@ main {
 
 @media (max-width: 600px) {
     .todo-content {
-        width: 62%;
+        width: 60%;
     }
+
+
+    .task-name {
+
+        margin: auto 20%;
+        overflow: hidden;
+    }
+
+    .sidebar {
+
+        width: 80px !important;
+
+    }
+
 
 }
 
@@ -211,6 +237,8 @@ main {
     .todo-content {
         width: 55%;
     }
+
+
 
 }
 

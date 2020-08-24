@@ -1,10 +1,14 @@
 var acc = document.querySelector(".accordion");
 var panel = document.getElementsByClassName("panel");
 
+var panelClick = document.getElementsByClassName("panel-click");
 
-for (let i = 0; i < panel.length; i++) {
 
-    panel[i].addEventListener("click", function () {
+console.log(panelClick);
+
+for (let i = 0; i < panelClick.length; i++) {
+
+    panelClick[i].addEventListener("click", function () {
         this.classList.toggle("active");
         /*panel[(i + 1) % panel.length].classList.remove("active");
         panel[(i + 2) % panel.length].classList.remove("active");
