@@ -1,7 +1,5 @@
 var acc = document.querySelector(".accordion");
-
 var panel = document.getElementsByClassName("panel");
-
 
 
 
@@ -15,16 +13,7 @@ acc.addEventListener("click", function () {
     var panel = document.getElementsByClassName("panel");
 
     for (let i = 0; i < panel.length; i++) {
-
         panel[i].classList.toggle("hidden");
     }
 
-    /* Toggle between hiding and showing the active panel 
-
-    if (panel.style.display === "block") {
-        panel.style.display = "none";
-
-    } else {
-        panel.style.display = "block";
-    }*/
 });

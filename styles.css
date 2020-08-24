@@ -6,7 +6,7 @@ body {
 .main-header {
     display: flex;
     position: relative;
-    width: 100%;
+    width: 96%;
     justify-content: space-between;
     align-items: center;
     border-radius: 20px;
@@ -14,6 +14,7 @@ body {
     box-shadow: 10px 10px goldenrod;
     padding: 10px 0;
 }
+
 
 .title {
     display: flex;
@@ -26,16 +27,59 @@ body {
     margin: 0px 0 0 10px;
 }
 
-.sidebar {
+
+main {
+
+    position: absolute;
+    display: flex;
     margin-top: 50px;
-    height: 100vh;
+    width: 100%;
+    height: 80%;
+}
+
+.sidebar {
+
+    height: 100%;
     border-radius: 20px;
     border: 5px solid lightblue;
     box-shadow: 10px 10px lightblue;
     padding: 0 5px;
     position: relative;
     float: left;
+}
 
+.todo-content {
+
+    height: 100%;
+    width: 85%;
+    position: relative;
+    margin-left: 20px;
+    border-radius: 20px;
+    border: 10px solid green;
+    box-shadow: 10px 10px green;
+    text-align: center;
+
+
+}
+
+
+.task-title {
+    color: green;
+}
+
+.new-task {
+
+    position: absolute;
+
+    bottom: 7%;
+    right: 7%;
+    color: green;
+    float: right;
+    /* margin-top: 620px;
+    margin-right: 20px;
+    */
+    width: 48px;
+    height: 48px;
 }
 
 
@@ -70,10 +114,112 @@ body {
     text-align: center;
     padding-bottom: 10px;
     padding-top: 10px;
+    display: flex;
+    cursor: pointer;
+
+
+}
+
+.panel>* {
+    margin-right: 5px;
+}
+
+
+.panel>.iconify {
+
+    width: 30px;
+    height: 30px;
 }
 
 /* class hidden*/
 
 .hidden {
     display: none !important;
+}
+
+
+
+/* Responsiveness*/
+
+
+@media (max-width: 1200px) {
+
+
+    .todo-content {
+
+        width: 77%;
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+
+    .todo-content {
+
+        width: 67%;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+    .todo-content {
+        width: 62%;
+    }
+
+}
+
+
+
+@media (max-height: 900px) {
+
+    .todo-content,
+    .sidebar {
+        height: 90%;
+    }
+
+}
+
+
+@media (max-height: 700px) {
+
+
+    .todo-content,
+    .sidebar {
+
+        height: 85%;
+    }
+
+}
+
+
+@media (max-height: 500px) {
+
+    .todo-content,
+    .sidebar {
+        height: 80%;
+    }
+
+}
+
+
+@media (max-height: 400px) {
+
+    .todo-content,
+    .sidebar {
+        height: 75%;
+    }
+
+}
+
+
+@media (max-height: 300px) {
+
+    .todo-content,
+    .sidebar {
+        height: 65%;
+    }
+
 }
