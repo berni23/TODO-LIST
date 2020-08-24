@@ -53,13 +53,14 @@ main {
     height: 100%;
     width: 85%;
     position: relative;
+    overflow: hidden;
     margin-left: 20px;
     border-radius: 20px;
     border: 10px solid green;
     box-shadow: 10px 10px green;
     text-align: center;
-
-
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 
@@ -68,20 +69,14 @@ main {
 }
 
 .new-task {
-
     position: absolute;
-
-    bottom: 7%;
-    right: 7%;
+    bottom: 4%;
+    right: 2%;
     color: green;
     float: right;
-    /* margin-top: 620px;
-    margin-right: 20px;
-    */
     width: 48px;
     height: 48px;
 }
-
 
 /* Style the buttons that are used to open and close the accordion panel */
 .accordion {
@@ -95,14 +90,7 @@ main {
     text-align: left;
     border: none;
     outline: none;
-    transition: 0.4s;
-}
-
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active,
-.accordion:hover {
-    /*box-shadow: 0 0px 50px 0px rgba(135, 206, 250, 1);*/
-    background-color: rgba(135, 206, 250, 0.3);
+    transition: .5s;
 }
 
 /* Style the accordion panel. Note: hidden by default */
@@ -116,19 +104,65 @@ main {
     padding-top: 10px;
     display: flex;
     cursor: pointer;
-
-
+    transition: .5s;
 }
 
 .panel>* {
     margin-right: 5px;
 }
 
-
 .panel>.iconify {
-
     width: 30px;
     height: 30px;
+}
+
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.accordion:hover {
+    /*box-shadow: 0 0px 50px 0px rgba(135, 206, 250, 1);*/
+    background-color: rgba(135, 206, 250, 0.3);
+}
+
+
+.task {
+    position: relative;
+    margin: 1% 10%;
+    border-radius: 10px;
+    border: 5px solid green;
+    padding: 10px 0;
+    display: flex;
+    height: 35px;
+    overflow: hidden;
+}
+
+.wrapper-input-complete {
+
+    position: absolute;
+    left: 0px;
+    top: 20px;
+    width: 10%;
+    height: 20px;
+    padding: 0;
+}
+
+.wrapper-input-important {
+
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    width: 10%;
+    height: 20px;
+    padding: 0;
+}
+
+
+
+
+.task-name {
+
+    margin: auto 100px;
+    overflow: hidden;
 }
 
 /* class hidden*/
@@ -173,6 +207,14 @@ main {
 
 
 
+@media (max-width: 400px) {
+    .todo-content {
+        width: 55%;
+    }
+
+}
+
+
 @media (max-height: 900px) {
 
     .todo-content,
@@ -188,8 +230,7 @@ main {
 
     .todo-content,
     .sidebar {
-
-        height: 85%;
+        height: 80%;
     }
 
 }
@@ -199,7 +240,7 @@ main {
 
     .todo-content,
     .sidebar {
-        height: 80%;
+        height: 70%;
     }
 
 }
@@ -209,7 +250,7 @@ main {
 
     .todo-content,
     .sidebar {
-        height: 75%;
+        height: 65%;
     }
 
 }
@@ -219,7 +260,21 @@ main {
 
     .todo-content,
     .sidebar {
-        height: 65%;
+        height: 60%;
+    }
+
+    .main-header {
+        display: none;
+    }
+
+    .task-title {
+
+        display: none
+    }
+
+    .new-task {
+
+        width: 30px;
     }
 
 }
