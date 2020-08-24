@@ -1,0 +1,79 @@
+body {
+    margin: 20px;
+
+}
+
+.main-header {
+    display: flex;
+    position: relative;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 20px;
+    border: 5px solid goldenrod;
+    box-shadow: 10px 10px goldenrod;
+    padding: 10px 0;
+}
+
+.title {
+    display: flex;
+    color: burlywood;
+    font-size: 30px;
+    margin-left: 30px;
+}
+
+.title p {
+    margin: 0px 0 0 10px;
+}
+
+.sidebar {
+    margin-top: 50px;
+    height: 100vh;
+    border-radius: 20px;
+    border: 5px solid lightblue;
+    box-shadow: 10px 10px lightblue;
+    padding: 0 5px;
+    position: relative;
+    float: left;
+
+}
+
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    color: lightblue;
+    background-color: white;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 20px;
+    margin: 10px 0 10px 0;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.accordion:hover {
+    /*box-shadow: 0 0px 50px 0px rgba(135, 206, 250, 1);*/
+    background-color: rgba(135, 206, 250, 0.3);
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    background-color: white;
+    overflow: hidden;
+    color: lightblue;
+    border-bottom: 1px solid lightgrey;
+    text-align: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+/* class hidden*/
+
+.hidden {
+    display: none !important;
+}
