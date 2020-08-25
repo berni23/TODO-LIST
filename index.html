@@ -21,49 +21,62 @@
         <div class="sidebar">
             <div>
                 <button class="accordion">Tasks
-                    <span id="caret-down" class="iconify hidden" data-icon="ant-design:caret-down-filled"
+                    <span id="caret-down-acc" class="iconify hidden" data-icon="ant-design:caret-down-filled"
                         data-inline="false"></span>
-                    <span id="caret-right" class="iconify" data-icon="ant-design:caret-right-filled"
+                    <span id="caret-right-acc" class="iconify" data-icon="ant-design:caret-right-filled"
                         data-inline="false"></span></button>
-                <div class="panel panel-click hidden">Important</div>
-                <div class="panel panel-click hidden">Completed</div>
-                <div class="panel  hidden">
+
+                <div id="filter-todo" class="panel panel-click panel-task  active hidden">TO-DO</div>
+                <div class="panel panel-click panel-task hidden">Important</div>
+                <div id="filter-completed" class="panel panel-click panel-task hidden">Completed</div>
+                <div class="panel custom-list">
                     <div style="margin-top:5px;">Custom lists</div>
-                    <span class="iconify" data-icon="ant-design:plus-circle-outlined" data-inline="false"></span>
+                    <span id="caret-right-custom" class="iconify" data-icon="ant-design:caret-right-filled"
+                        data-inline="false"></span>
+                    <span id="caret-down-custom" class="iconify hidden" data-icon="ant-design:caret-down-filled"
+                        data-inline="false"></span>
                 </div>
+                <div class="panel panel-list hidden">
+                    <div style="margin-top:5px;">New list</div>
+                    <span class="iconify plus-icon" data-icon="ant-design:plus-circle-outlined"
+                        data-inline="false"></span>
+                </div>
+
+                <div class="panel panel-list panel-click hidden">
+                    list 1
+                </div>
+
+                <div class="panel panel-list panel-click hidden">
+                    list 2
+                </div>
+
+            </div>
+        </div>
+        <div class="todo-content">
+            <div class="title-wrapper">
+                <h4>Completed</h4>
+                <h2 class="task-title">TASK LIST</h2>
+                <h4>Important</h4>
             </div>
 
-        </div>
-
-        <div class="todo-content">
-            <h2 class="task-title">TASK LIST</h2>
             <div class="task-wrapper">
-
-
                 <div id="20410498" class="task">
-                    <div class="wrapper-input-complete"><input class="input-complete" class="input-complete"
-                            type="checkbox"></div><span class="task-name">My first
+                    <div class="wrapper-input-complete"><input class="input-complete" type="checkbox"></div><span
+                        class="task-name">My first
                         taskBLABLALBALBAL</span>
                     <div class="wrapper-input-important"> <input class="input-important" type="checkbox">
                     </div>
                 </div>
-
-
-
                 <div id="20410498" class="task">
-                    <div class="wrapper-input-complete"><input class="input-complete" class="input-complete"
-                            type="checkbox"></div><span class="task-name">My first
+                    <div class="wrapper-input-complete"><input class="input-complete" type="checkbox"></div><span
+                        class="task-name">My first
                         taskBLABLALBALBALBLABLABLABALBAaaaaaaaaaaaaaaaaaaaaaaaaaaa</span>
                     <div class="wrapper-input-important"> <input class="input-important" type="checkbox">
                     </div>
                 </div>
-
             </div>
-
             <span class="iconify new-task" data-icon="ant-design:plus-circle-outlined" data-inline="false"></span>
-
         </div>
-
     </main>
 </body>
 

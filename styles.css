@@ -101,7 +101,7 @@ main {
     overflow: hidden;
     color: lightblue;
     border-bottom: 1px solid lightgrey;
-    text-align: center;
+    text-align: left;
     padding-bottom: 10px;
     padding-top: 10px;
     display: flex;
@@ -109,20 +109,13 @@ main {
     transition: .5s;
 }
 
-.panel>*,
-.panel-list>* {
-    margin-right: 5px;
-}
 
-.panel>.iconify {
-    width: 30px;
-    height: 30px;
-}
 
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active,
-.accordion:hover {
+.accordion:hover,
+.custom-list:hover {
     /*box-shadow: 0 0px 50px 0px rgba(135, 206, 250, 1);*/
     background-color: rgba(135, 206, 250, 0.3);
 }
@@ -160,13 +153,23 @@ main {
 }
 
 
-
-
 .task-name {
 
     margin: auto 10%;
     overflow: hidden;
 }
+
+
+.title-wrapper {
+
+    justify-content: space-between;
+    color: green;
+    margin: 1% 12.5%;
+    padding: 10px 0;
+    display: flex;
+    height: 35px;
+}
+
 
 /* class hidden*/
 
@@ -174,30 +177,28 @@ main {
     display: none !important;
 }
 
+.sidebar .iconify {
+    position: absolute;
+    right: 20px;
+    width: 25px;
+    height: 25px;
 
+}
 
 /* Responsiveness*/
 @media (max-width: 1400px) {
-
-
     .todo-content {
-
         width: 80%;
     }
 
 }
 
-
 @media (max-width: 1200px) {
-
-
     .todo-content {
-
         width: 75%;
     }
 
 }
-
 
 @media (max-width: 800px) {
 
@@ -215,6 +216,16 @@ main {
         width: 60%;
     }
 
+    .title-wrapper {
+        display: none !important;
+    }
+
+
+    .task-wrapper {
+
+        margin-top: 40px;
+    }
+
 
     .task-name {
 
@@ -223,22 +234,15 @@ main {
     }
 
     .sidebar {
-
-        width: 80px !important;
+        width: 80px;
 
     }
-
-
 }
 
-
-
-@media (max-width: 400px) {
+@media (max-width: 500px) {
     .todo-content {
         width: 55%;
     }
-
-
 
 }
 
