@@ -61,8 +61,8 @@ main {
     overflow: hidden;
     margin-left: 20px;
     border-radius: 20px;
-    border: 10px solid green;
-    box-shadow: 10px 10px green;
+    border: 10px solid lightblue;
+    box-shadow: 10px 10px lightblue;
     text-align: center;
     background-repeat: no-repeat;
     background-position: center;
@@ -70,14 +70,14 @@ main {
 
 
 .task-title {
-    color: green;
+    color: burlywood;
 }
 
 .new-task {
     position: absolute;
     bottom: 4%;
     right: 2%;
-    color: green;
+    color: burlywood;
     float: right;
     width: 48px;
     height: 48px;
@@ -126,7 +126,6 @@ main {
 
 
 
-
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active,
 .accordion:hover,
@@ -140,7 +139,7 @@ main {
     position: relative;
     margin: 1% 10%;
     border-radius: 10px;
-    border: 5px solid green;
+    border: 5px solid lightblue;
     padding: 10px 0;
     display: flex;
     height: 35px;
@@ -170,8 +169,6 @@ main {
 
 
 .importantComplete-wrapper {
-
-
     margin-top: 100px !important;
 }
 
@@ -187,7 +184,7 @@ main {
 .title-wrapper {
 
     justify-content: space-between;
-    color: green;
+    color: burlywood;
     margin: 1% 12.5%;
     padding: 10px 0;
     display: flex;
@@ -240,24 +237,13 @@ main {
 .modal-title {
 
     text-align: center;
+    color: burlywood;
 }
 
 /* displayed the modal*/
 
-.show-modal,
-.show-info {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1.0);
-    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
-    z-index: 2;
-}
 
-
-/* modal content -> for event creation*/
-/* modal-check-content -> when checking an event already created*/
-.modal-content,
-.modal-check-content {
+.modal-content {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -268,7 +254,6 @@ main {
     height: 35rem;
     border-radius: 0.5rem;
 }
-
 
 .modal-form {
     position: relative;
@@ -302,11 +287,6 @@ main {
 }
 
 
-#green:hover {
-
-    background-color: green;
-}
-
 .close-button {
     float: right;
     width: 1.5rem;
@@ -320,6 +300,8 @@ main {
 .close-button:hover {
     background-color: darkgray;
 }
+
+
 
 /* form error */
 
@@ -344,6 +326,37 @@ main {
 .error-msg p {
     margin: auto;
 }
+
+
+.info-window,
+.event-expired,
+.info-reminder,
+.remove-window {
+    position: fixed;
+    top: 40%;
+    left: 40%;
+    padding: 15px;
+    font-size: 20px;
+    background-color: whitesmoke;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 0 0 5px black;
+    transform: scale(1.1);
+    z-index: 10;
+    opacity: 0;
+    transition: visibility 0s linear 0.25s, opacity 0.25s linear 0s, transform 0.25s;
+}
+
+
+.show-modal,
+.show-info {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.0);
+    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+    z-index: 2;
+}
+
 
 /* Responsiveness*/
 @media (max-width: 1400px) {

@@ -17,9 +17,9 @@
             <p>MY TASKS</p>
         </div>
     </header>
+    <div class="info-window"> Task successfully created!</div>
     <main>
         <div class="sidebar">
-
             <div class="sidebar-wrapper" style="margin-top:25px">
                 <div id="filter-todo" class="panel panel-click active">TO-DO</div>
                 <div class="panel panel-click ">Important</div>
@@ -36,15 +36,12 @@
                     <span class="iconify plus-icon" data-icon="ant-design:plus-circle-outlined"
                         data-inline="false"></span>
                 </div>
-
                 <div class="panel panel-list panel-click hidden">
                     list 1
                 </div>
-
                 <div class="panel panel-list panel-click hidden">
                     list 2
                 </div>
-
             </div>
         </div>
         <div class="todo-content">
@@ -53,7 +50,6 @@
                 <h2 class="task-title">TASK LIST</h2>
                 <h4>Important</h4>
             </div>
-
             <div class="task-wrapper">
                 <div id="20410498" class="task">
                     <div class="wrapper-input-complete"><input class="input-complete" type="checkbox"></div><span
@@ -74,7 +70,6 @@
                     data-inline="false"></span> </button>
         </div>
     </main>
-
     <div class="modal modal-create-form">
         <div class="modal-content">
             <span class="close-button" id="close-modal">&times;</span>
@@ -88,33 +83,25 @@
                     <li class="description-wrapper"><label>Description:</label><textarea rows="3" id="input-description"
                             name="input-description"></textarea></li>
                     <li><br></li>
-
                     <li class="importantComplete-wrapper">
                         <div><input id="inputCompleted" type="checkbox"> <label>Completed</label></div>
                         <div> <input id="inputImportant" type="checkbox">
                             <label>Important</label>
-
                         </div>
                     </li>
-
-
-
                     <li style="margin-top:50px"><label>Custom list:</label>
                         <input list="data-customList" id="select-custom-list" placeholder="Select custom list">
                         <datalist id="data-customList">
-                            <option value="Meeting" data-color="lightgreen"></option>
-                            <option value="Personal" data-color></option>
+                            <option value="Meeting"></option>
+                            <option value="Personal"></option>
                             <option value="Study"></option>
                             <option value="Reminder"></option>
                         </datalist>
-
                     </li>
                     <li><br></li>
-
                     <li style="margin-top:20px"><label>Task color:</label>
                         <input list="data-taskColor" id="select-task-color" placeholder="select a task color">
                         <datalist id="data-taskColor">
-
                             <option value="purple"></option>
                             <option value="green"> </option>
                             <option value="yellow"></option>
@@ -123,11 +110,9 @@
                             <option value="pink"></option>
                             <option value="blue"></option>
                         </datalist>
-
                     </li>
                 </ul>
             </form>
-
             <div class="createCancel-wrapper">
                 <button class="button-form" id="create-event">Create</button>
                 <button class="button-form" id="cancel-event">Cancel</button>
