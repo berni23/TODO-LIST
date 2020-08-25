@@ -5,8 +5,10 @@ var panelClick = document.getElementsByClassName("panel-click");
 var panelTask = document.getElementsByClassName("panel-task");
 var taskTitle = document.querySelector(".task-title");
 var filterTodo = document.getElementById("filter-todo");
-var taskWrapper = document.querySelector(".task-wrapper");
+var filterImportant = document.getElementById("filter-important");
 var filterCompleted = document.getElementById("filter-completed");
+var taskWrapper = document.querySelector(".task-wrapper");
+
 var modal = document.querySelector(".modal");
 var btnModal = document.querySelector(".new-task");
 var btnCloseModal = document.getElementById("close-modal");
@@ -29,8 +31,9 @@ btnCancelTask.addEventListener("click", cancelTask);
 document.addEventListener('keydown', handleKeyDown);
 
 
-
-
+filterTodo.addEventListener("click", displayTODO);
+filterImportant.addEventListener("click", displayImportant);
+filterCompleted.addEventListener("click", displayCompleted);
 
 for (let i = 0; i < panelClick.length; i++) {
     panelClick[i].addEventListener("click", function () {
@@ -50,14 +53,63 @@ customListSelector.addEventListener("click", function () {
     }
 });
 
-
-
 initialize();
 
 
-function initialize() {
+function checkFilter() {
 
+    var filterId = document.querySelector(".active").id;
+
+    console.log(filterId);
+    switch (filterId) {
+        case "filter-todo": {
+            displayTODO();
+            break;
+        }
+        case "filter-completed": {
+            displayCompleted();
+            break;
+        }
+        case "filter-important": {
+            displayImportant();
+            break;
+        }
+    }
+}
+
+function initialize() {
     displayTODO();
+}
+
+function displayTODO() {
+    clearPanel();
+    var tasks = getAll();
+    for (let i = 0; i < tasks.length; i++) {
+        if (!tasks[i].completed && !tasks[i].important && !tasks[i].list) {
+            displayTask(tasks[i]);
+        }
+    }
+}
+
+function displayCompleted() {
+    clearPanel();
+    var tasks = getAll();
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].completed) {
+            displayTask(tasks[i]);
+        }
+    }
+}
+
+function displayImportant() {
+    clearPanel();
+    var tasks = getAll();
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].important && !tasks[i].completed) {
+            displayTask(tasks[i]);
+        }
+    }
+
 }
 
 function toggleInfoWindow() {
@@ -85,28 +137,58 @@ function cancelTask() {
 
 function submitTask() {
     if (validate()) {
-        console.log("validation suceeded");
         var newTask = createTask();
         toggleModal();
+        resetForm();
         try {
-            localStorage.setItem(newTask.id, JSON.stringify(createTask()));
+            setItem(newTask);
         } catch {
             message("Task could not be stored");
             return;
         }
-
         displayTask(newTask);
         message("Task successfully created!");
     }
 }
 
+function setItem(item) {
+    var arrayTodo = getAll();
+    var index = arrayTodo.findIndex(x => x.id === item.id);
+    if (index === -1) arrayTodo.push(item);
+    else arrayTodo[index] = item
+    localStorage.setItem('todo', JSON.stringify(arrayTodo));
+
+}
+
+function getItem(id) {
+    var arrayTodo = getAll();
+
+    var item;
+
+    for (elem of arrayTodo) {
+
+        if (elem.id == id) item = elem;
+    }
+
+    return item;
+}
+
+function getAll() {
+    try {
+        var arrayTodo = JSON.parse(localStorage.getItem('todo'));
+        if (!arrayTodo) {
+            arrayTodo = [];
+        }
+    } catch {
+        var arrayTodo = [];
+    }
+
+    return arrayTodo;
+
+}
 
 function createTask() {
-    console.log(inputImportant.checked);
-    console.log(inputColor.value);
-
     var colorChosen = inputColor.value ? inputColor.value : '#add8e6';
-
     return {
         title: inputTitle.value.trim(),
         description: inputDescription.value.trim(),
@@ -118,7 +200,6 @@ function createTask() {
     }
 }
 
-
 function displayTask(task) {
     var elemTask = document.createElement('div');
     elemTask.id = task.id;
@@ -126,33 +207,49 @@ function displayTask(task) {
     elemTask.style.borderColor = task.color;
     var complete = document.createElement('div');
     complete.classList.add("wrapper-input-complete");
-    complete.innerHTML = "<input class = 'input-complete' type = 'checkbox'>";
+    var inputComplete = document.createElement("input");
+    inputComplete.type = "checkbox";
+    inputComplete.classList.add("input-complete");
+    inputComplete.addEventListener("change", setComplete)
+    inputComplete.checked = task.completed;
+    complete.appendChild(inputComplete);
+    //complete.innerHTML = "<input class = 'input-complete' type = 'checkbox'>";
     var taskName = document.createElement('span');
     taskName.classList.add('task-name');
     taskName.textContent = task.title;
-
-    console.log(task.title);
     var important = document.createElement('div');
     important.classList.add('wrapper-input-important');
-    important.innerHTML = "<input class = 'input-important' type = 'checkbox'>";
+    var inputImportant = document.createElement("input");
+    inputImportant.type = "checkbox";
+    inputImportant.classList.add("input-important");
+    inputImportant.addEventListener("change", setImportant)
+    inputImportant.checked = task.important;
+    important.appendChild(inputImportant);
+    // important.innerHTML = "<input class = 'input-important' type = 'checkbox'>";
     elemTask.appendChild(complete);
     elemTask.appendChild(taskName);
     elemTask.appendChild(important);
     taskWrapper.appendChild(elemTask);
+}
 
+function setImportant(event) {
+    var id = event.target.parentElement.parentElement.id;
+    var task = getItem(id);
+    if (event.target.checked) task.important = true;
+    else task.important = false;
+    setItem(task);
+    checkFilter();
 }
 
 
-function displayTODO() {
 
-    clearPanel();
-    var tasks = allStorage();
-    console.log(tasks)
-    for (let i = 0; i < tasks.length; i++) {
-        if (!tasks[i].completed && !tasks[i].important) {
-            displayTask(tasks[i]);
-        }
-    }
+function setComplete(event) {
+    var id = event.target.parentElement.parentElement.id;
+    var task = getItem(id);
+    if (event.target.checked) task.completed = true;
+    else task.completed = false;
+    setItem(task);
+    checkFilter();
 }
 
 function clearPanel() {
@@ -180,7 +277,6 @@ function validate() {
         validation = false;
     }
     if (!DescRegEx.test(inputDescription.value)) {
-        console.log("description failed")
         inputDescription.parentElement.insertAdjacentHTML(
             "afterend",
             "<div class='error-msg' style = ' margin-top:85px';><p>The description must have a maximum of 500 characters</p></div>"
@@ -202,7 +298,6 @@ function clearErrors() {
     }
 }
 
-
 function message(msg) {
     infoWindow.textContent = msg;
     toggleInfoWindow();
@@ -211,23 +306,24 @@ function message(msg) {
 
 function idTask() {
     var id = Math.floor(Math.random() * Math.floor(10000000)); // 1 in ten millions
-    if (localStorage.getItem(id)) {
+    if (getItem(id)) {
         idTask();
     } else {
         return id;
     }
 }
 
-
-function allStorage() {
+/*function allStorage() {
     var values = [];
     var keys = Object.keys(localStorage);
-    var i = keys.length;
-    var j = 0;
-    while (i) {
-        values.push(JSON.parse(localStorage.getItem(keys[j])));
-        i--;
-        j++;
+    console.log(keys);
+    var i = 0;
+    while (i < keys.length) {
+        values.push(JSON.parse(localStorage.getItem(keys[i])));
+        i++;
     }
     return values;
+    //return keys;
 }
+
+*/
