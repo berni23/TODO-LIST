@@ -201,10 +201,7 @@ main {
 }
 
 @media (max-width: 800px) {
-
-
     .todo-content {
-
         width: 65%;
     }
 

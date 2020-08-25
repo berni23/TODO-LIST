@@ -19,16 +19,11 @@
     </header>
     <main>
         <div class="sidebar">
-            <div>
-                <button class="accordion">Tasks
-                    <span id="caret-down-acc" class="iconify hidden" data-icon="ant-design:caret-down-filled"
-                        data-inline="false"></span>
-                    <span id="caret-right-acc" class="iconify" data-icon="ant-design:caret-right-filled"
-                        data-inline="false"></span></button>
 
-                <div id="filter-todo" class="panel panel-click panel-task  active hidden">TO-DO</div>
-                <div class="panel panel-click panel-task hidden">Important</div>
-                <div id="filter-completed" class="panel panel-click panel-task hidden">Completed</div>
+            <div class="sidebar-wrapper" style="margin-top:25px">
+                <div id="filter-todo" class="panel panel-click active">TO-DO</div>
+                <div class="panel panel-click ">Important</div>
+                <div id="filter-completed" class="panel panel-click">Completed</div>
                 <div class="panel custom-list">
                     <div style="margin-top:5px;">Custom lists</div>
                     <span id="caret-right-custom" class="iconify" data-icon="ant-design:caret-right-filled"
