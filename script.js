@@ -352,6 +352,9 @@ function chosenList(event) {
     displayTasksFromlist(id);
 }
 
+
+var activWindow = document.getElementById("activate-window");
+
 function displayTasksFromlist(idList) {
 
     clearPanel();
@@ -363,12 +366,14 @@ function displayTasksFromlist(idList) {
     }
     taskTitle.textContent = idList.toUpperCase();
     taskTitle.dataset.id = idList;
-    titleWrapper.addEventListener("mouseover", showRemoveListWindow);
-    titleWrapper.addEventListener("mouseout", function () {
-
-        console.log("mouseout");
+    activWindow.addEventListener("mouseover", showRemoveListWindow);
+    activWindow.addEventListener("mouseout", function () {
+        console.log("mouseleave");
         removeListWindow.classList.remove("show-info");
         removeListWindow.classList.add("hidden");
+        removeListWindow.classList.remove("high-z")
+
+
     })
 
 
@@ -377,9 +382,13 @@ function displayTasksFromlist(idList) {
 function showRemoveListWindow() {
     console.log("click!")
     if (taskTitle.dataset.id != "null") {
+
+        titleWrapper.classList.add("high-z");
         removeListWindow.classList.add("show-info");
         removeListWindow.classList.remove("hidden");
+        removeListWindow.classList.add("high-z");;
     }
+
 }
 
 
@@ -407,7 +416,7 @@ function displayCompleted() {
     var tasks = getAll();
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].completed) {
-            displayTask(tasks[i]);
+            displayTask(tasks[i], completed = true);
         }
     }
     taskTitle.textContent = "COMPLETED";
@@ -529,7 +538,7 @@ function createTask() {
     }
 }
 
-function displayTask(task) {
+function displayTask(task, completed = false) {
     var elemTask = document.createElement('div');
     elemTask.id = task.id;
     elemTask.classList.add('task');
@@ -542,7 +551,7 @@ function displayTask(task) {
     inputComplete.addEventListener("change", setComplete)
     inputComplete.checked = task.completed;
     complete.appendChild(inputComplete);
-    //complete.innerHTML = "<input class = 'input-complete' type = 'checkbox'>";
+
     var taskName = document.createElement('span');
     taskName.classList.add('task-name');
     taskName.textContent = task.title;
@@ -556,11 +565,14 @@ function displayTask(task) {
     inputImportant.addEventListener("change", setImportant)
     inputImportant.checked = task.important;
     important.appendChild(inputImportant);
-    // important.innerHTML = "<input class = 'input-important' type = 'checkbox'>";
+
     elemTask.appendChild(complete);
     elemTask.appendChild(taskName);
     elemTask.appendChild(important);
+
+    if (inputComplete.checked) elemTask.classList.add("completed");
     taskWrapper.appendChild(elemTask);
+
 }
 
 function setImportant(event) {

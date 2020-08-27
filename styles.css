@@ -180,6 +180,11 @@ main {
     padding: 0;
 }
 
+.completed {
+
+    text-decoration: line-through;
+}
+
 .wrapper-input-important {
 
     position: absolute;
@@ -375,7 +380,7 @@ main {
 .remove-list-window {
 
     top: 20%;
-    left: 60%;
+    left: 50%;
 }
 
 .high-z {
