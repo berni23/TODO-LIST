@@ -18,9 +18,20 @@
         </div>
     </header>
     <div class="info-window"> Task successfully created!</div>
+    <div class="new-list-window">
+        <p> Select custom list name</p>
+        <input id="input-list" type="text"><br>
+
+        <div class="buttons-wrapper">
+
+            <button id="list-created">Create</button>
+            <button id="list-canceled">Cancel</button></div>
+
+    </div>
+    </div>
     <main>
         <div class="sidebar">
-            <div class="sidebar-wrapper" style="margin-top:25px">
+            <div class="sidebar-content" style="margin-top:25px">
                 <div id="filter-todo" class="panel panel-click active">TO-DO</div>
                 <div id="filter-important" class="panel panel-click ">Important</div>
                 <div id="filter-completed" class="panel panel-click">Completed</div>
@@ -31,7 +42,7 @@
                     <span id="caret-down-custom" class="iconify hidden" data-icon="ant-design:caret-down-filled"
                         data-inline="false"></span>
                 </div>
-                <div class="panel panel-list hidden">
+                <div id="new-custom-list" class="panel hidden">
                     <div style="margin-top:5px;">New list</div>
                     <span class="iconify plus-icon" data-icon="ant-design:plus-circle-outlined"
                         data-inline="false"></span>

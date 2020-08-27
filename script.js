@@ -1,5 +1,6 @@
-var acc = document.querySelector(".accordion");
+var sidebarContent = document.querySelector(".sidebar-content")
 var customListSelector = document.querySelector(".custom-list");
+var dataCustomList = document.getElementById("data-customList");
 var lists = document.querySelectorAll(".panel-list");
 var panelClick = document.getElementsByClassName("panel-click");
 var panelTask = document.getElementsByClassName("panel-task");
@@ -8,7 +9,6 @@ var filterTodo = document.getElementById("filter-todo");
 var filterImportant = document.getElementById("filter-important");
 var filterCompleted = document.getElementById("filter-completed");
 var taskWrapper = document.querySelector(".task-wrapper");
-
 var modal = document.querySelector(".modal");
 var btnModal = document.querySelector(".new-task");
 var btnCloseModal = document.getElementById("close-modal");
@@ -20,47 +20,134 @@ var inputColor = document.getElementById("select-task-color");
 var inputCustomList = document.getElementById("select-custom-list");
 var btnCreateTask = document.getElementById("create-event");
 var btnCancelTask = document.getElementById("cancel-event");
+var newCustomList = document.getElementById("new-custom-list");
+var inputList = document.getElementById("input-list");
+var infoWindow = document.querySelector(".info-window");
+var newListWindow = document.querySelector(".new-list-window");
+newCustomList.addEventListener("click", toggleNewListPanel);
+
+var btnCreateList = document.getElementById("list-created");
+var btnCancelList = document.getElementById("list-canceled");
+
+btnCreateList.addEventListener("click", createList);
+btnCancelList.addEventListener("click", toggleNewListPanel);
+
 
 // window used for delivering information to the user
 
-var infoWindow = document.querySelector(".info-window");
 btnModal.addEventListener("click", toggleModal);
 btnCloseModal.addEventListener("click", toggleModal);
 btnCreateTask.addEventListener("click", submitTask);
 btnCancelTask.addEventListener("click", cancelTask);
 document.addEventListener('keydown', handleKeyDown);
-
-
 filterTodo.addEventListener("click", displayTODO);
 filterImportant.addEventListener("click", displayImportant);
 filterCompleted.addEventListener("click", displayCompleted);
 
 for (let i = 0; i < panelClick.length; i++) {
-    panelClick[i].addEventListener("click", function () {
-        for (let j = 0; j < panelClick.length; j++) {
-            panelClick[j].classList.remove("active");
-        }
-        this.classList.toggle("active");
-    });
+    panelClick[i].addEventListener("click", panelClickActive);
+}
+
+function panelClickActive(event) {
+
+    var activeOption = document.querySelector(".active");
+    if (activeOption) activeOption.classList.remove("active");
+    event.target.classList.toggle("active");
+
 }
 customListSelector.addEventListener("click", function () {
     /* Toggle between adding and removing the "active" class,
     to highlight the button that controls the panel */
+
+    lists = document.querySelectorAll(".panel-list");
     document.getElementById("caret-down-custom").classList.toggle("hidden");
     document.getElementById("caret-right-custom").classList.toggle("hidden");
+    newCustomList.classList.toggle("hidden");
+
     for (let i = 0; i < lists.length; i++) {
+
         lists[i].classList.toggle("hidden");
     }
 });
 
 initialize();
 
+function createList() {
+
+    clearErrors();
+    var arrayListNames = getListNames();
+
+    var nameList = inputList.value;
+    if (nameList == "") {
+        inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name can't be blank</p></div>")
+        inputList.classList.add("error-input");
+        return;
+    }
+
+    if (arrayListNames.includes(nameList)) {
+        inputList.insertAdjacentHTML('beforeBegin', "<div class='error-msg' ><p>List name already exists</p></div>")
+        inputList.classList.add("error-input")
+        return;
+    }
+
+    arrayListNames.push(nameList);
+    localStorage.setItem("listNames", JSON.stringify(arrayListNames));
+    toggleNewListPanel();
+    inputList.value = "";
+    message("List successfully created!");
+    clearErrors();
+    displayList(nameList);
+
+
+}
+
+
+function getListNames() {
+    try {
+        var arrayListNames = JSON.parse(localStorage.getItem("listNames"));
+        if (!arrayListNames) arrayListNames = [];
+    } catch {
+        var arrayListNames = [];
+
+    }
+    return arrayListNames;
+
+}
+
+function displayList(listName) {
+    var list = document.createElement('div');
+    list.classList.add('panel');
+    list.classList.add('panel-list');
+    list.classList.add('panel-click');
+    list.textContent = listName;
+    if (newCustomList.classList.contains("hidden"))
+        list.classList.add("hidden")
+    list.addEventListener("click", panelClickActive);
+    sidebarContent.appendChild(list);
+    var optionList = document.createElement('option');
+    optionList.value = listName;
+    list.addEventListener("click", chosenList);
+    dataCustomList.appendChild(optionList);
+
+
+}
+
+
+function displayAllLists() {
+    var names = getListNames();
+    console.log(names)
+    for (name of names) {
+        console.log(name);
+        displayList(name);
+    }
+}
+
+function toggleNewListPanel() {
+    newListWindow.classList.toggle("show-info");
+}
 
 function checkFilter() {
-
     var filterId = document.querySelector(".active").id;
-
-    console.log(filterId);
     switch (filterId) {
         case "filter-todo": {
             displayTODO();
@@ -79,6 +166,18 @@ function checkFilter() {
 
 function initialize() {
     displayTODO();
+    displayAllLists();
+}
+
+function chosenList(event) {
+    clearPanel();
+    var tasks = getAll();
+    var listName = event.target.textContent;
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].list == listName) {
+            displayTask(tasks[i]);
+        }
+    }
 }
 
 function displayTODO() {
@@ -162,14 +261,10 @@ function setItem(item) {
 
 function getItem(id) {
     var arrayTodo = getAll();
-
     var item;
-
     for (elem of arrayTodo) {
-
         if (elem.id == id) item = elem;
     }
-
     return item;
 }
 
@@ -182,7 +277,6 @@ function getAll() {
     } catch {
         var arrayTodo = [];
     }
-
     return arrayTodo;
 
 }
@@ -241,8 +335,6 @@ function setImportant(event) {
     checkFilter();
 }
 
-
-
 function setComplete(event) {
     var id = event.target.parentElement.parentElement.id;
     var task = getItem(id);
@@ -271,15 +363,15 @@ function validate() {
     if (!TitleRegEx.test(inputTitle.value)) {
         inputTitle.parentElement.insertAdjacentHTML(
             "beforeend",
-            "<div class='error-msg' style = ' margin-left: 100px; margin-top:25px'><p>Title must be between 1 and 60 characters</p></div>"
+            "<div class='error-msg' style = 'margin-left: 100px; margin-top:25px'><p>Title must be between 1 and 60 characters</p></div>"
         );
         inputTitle.classList.add("error-input")
         validation = false;
     }
     if (!DescRegEx.test(inputDescription.value)) {
         inputDescription.parentElement.insertAdjacentHTML(
-            "afterend",
-            "<div class='error-msg' style = ' margin-top:85px';><p>The description must have a maximum of 500 characters</p></div>"
+            "afterEnd",
+            "<div class='error-msg' style = ' margin-left:100px;margin-top:85px';><p>The description must have a maximum of 500 characters</p></div>"
         );
         inputDescription.classList.add("error-input");
         validation = false;
