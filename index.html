@@ -130,6 +130,56 @@
             </div>
         </div>
     </div>
+
+    <div class="modal check-modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-check-modal">&times;</span>
+            <h1 class="modal-title">Task info</h1>
+            <form class="modal-form">
+                <ul>
+                    <li><label>Title:</label>
+                        <input type="text" id="check-input-title">
+                    </li>
+                    <li><br></li>
+                    <li class="description-wrapper"><label>Description:</label><textarea rows="3" id="check-description"
+                            name="input-description"></textarea></li>
+                    <li><br></li>
+                    <li class="importantComplete-wrapper">
+                        <div><input id="check-completed" type="checkbox"> <label>Completed</label></div>
+                        <div> <input id="check-important" type="checkbox">
+                            <label>Important</label>
+                        </div>
+                    </li>
+                    <li style="margin-top:50px"><label>Custom list:</label>
+                        <input list="check-customList" id="selected-custom-list">
+                        <datalist id="check-customList">
+                            <option value="Meeting"></option>
+                            <option value="Personal"></option>
+                            <option value="Study"></option>
+                            <option value="Reminder"></option>
+                        </datalist>
+                    </li>
+                    <li><br></li>
+                    <li style="margin-top:20px"><label>Task color:</label>
+                        <input list="check-taskColor" id="check-task-color">
+                        <datalist id="check-taskColor">
+                            <option value="purple"></option>
+                            <option value="green"> </option>
+                            <option value="yellow"></option>
+                            <option value="orange"></option>
+                            <option value="grey"></option>
+                            <option value="pink"></option>
+                            <option value="blue"></option>
+                        </datalist>
+                    </li>
+                </ul>
+            </form>
+            <div class="createCancel-wrapper">
+                <button class="button-form" id="save-changes-task">Save changes</button>
+                <button class="button-form" id="cancel-changes-task">Cancel</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

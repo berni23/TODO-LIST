@@ -9,7 +9,7 @@ var filterTodo = document.getElementById("filter-todo");
 var filterImportant = document.getElementById("filter-important");
 var filterCompleted = document.getElementById("filter-completed");
 var taskWrapper = document.querySelector(".task-wrapper");
-var modal = document.querySelector(".modal");
+var modal = document.querySelector(".modal-create-form");
 var btnModal = document.querySelector(".new-task");
 var btnCloseModal = document.getElementById("close-modal");
 var inputTitle = document.getElementById("input-title");
@@ -32,8 +32,7 @@ var btnCancelList = document.getElementById("list-canceled");
 btnCreateList.addEventListener("click", createList);
 btnCancelList.addEventListener("click", toggleNewListPanel);
 
-
-// window used for delivering information to the user
+// Window used for delivering information to the user
 
 btnModal.addEventListener("click", toggleModal);
 btnCloseModal.addEventListener("click", toggleModal);
@@ -49,7 +48,6 @@ for (let i = 0; i < panelClick.length; i++) {
 }
 
 function panelClickActive(event) {
-
     var activeOption = document.querySelector(".active");
     if (activeOption) activeOption.classList.remove("active");
     event.target.classList.toggle("active");
@@ -58,38 +56,82 @@ function panelClickActive(event) {
 customListSelector.addEventListener("click", function () {
     /* Toggle between adding and removing the "active" class,
     to highlight the button that controls the panel */
-
     lists = document.querySelectorAll(".panel-list");
     document.getElementById("caret-down-custom").classList.toggle("hidden");
     document.getElementById("caret-right-custom").classList.toggle("hidden");
     newCustomList.classList.toggle("hidden");
-
     for (let i = 0; i < lists.length; i++) {
-
         lists[i].classList.toggle("hidden");
     }
 });
 
+// Modal for checking task info (on task title clicked)
+var checkModal = document.querySelector(".check-modal");
+var closeCheckModal = document.getElementById("close-check-modal");
+var checkTitle = document.getElementById("check-input-title");
+var checkDescription = document.getElementById("check-description");
+var checkCompleted = document.getElementById("check-completed");
+var checkImportant = document.getElementById("check-important");
+var checkCustomList = document.getElementById("check-customList");
+var checkColorSelected = document.getElementById("check-task-color");
+var bntSaveChangesTask = document.getElementById("save-changes-task");
+var cancelChangesTasK = document.getElementById("cancel-changes-task");
+closeCheckModal.addEventListener("click", toggleCheckModal);
+
+bntSaveChangesTask.addEventListener("click", saveChangesTask);
+
+
+function showTaskInfo(event) {
+    var id = event.currentTarget.parentElement.id
+    var task = getItem(id);
+    checkTitle.value = task.title;
+    checkTitle.dataset.id = id;
+    checkDescription.value = task.description;
+    checkCompleted.checked = task.completed;
+    checkImportant.checked = task.important;
+    checkCustomList.value = task.list;
+    checkColorSelected.value = task.color;
+    toggleCheckModal();
+
+}
+
+function saveChangesTask() {
+    var id = checkTitle.dataset.id;
+    var task = getItem(id);
+    task.title = checkTitle.value;
+    task.description = checkDescription.value
+    task.completed = checkCompleted.checked;
+    task.important = checkImportant.checked;
+    task.list = checkCustomList.value;
+    task.color = checkColorSelected.value;
+    setItem(task);
+
+
+
+    toggleCheckModal();
+    checkFilter();
+}
+
+function toggleCheckModal() {
+    checkModal.classList.toggle("show-info");
+}
+
 initialize();
 
 function createList() {
-
     clearErrors();
     var arrayListNames = getListNames();
-
     var nameList = inputList.value;
     if (nameList == "") {
         inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name can't be blank</p></div>")
         inputList.classList.add("error-input");
         return;
     }
-
     if (arrayListNames.includes(nameList)) {
         inputList.insertAdjacentHTML('beforeBegin', "<div class='error-msg' ><p>List name already exists</p></div>")
         inputList.classList.add("error-input")
         return;
     }
-
     arrayListNames.push(nameList);
     localStorage.setItem("listNames", JSON.stringify(arrayListNames));
     toggleNewListPanel();
@@ -97,10 +139,7 @@ function createList() {
     message("List successfully created!");
     clearErrors();
     displayList(nameList);
-
-
 }
-
 
 function getListNames() {
     try {
@@ -108,10 +147,8 @@ function getListNames() {
         if (!arrayListNames) arrayListNames = [];
     } catch {
         var arrayListNames = [];
-
     }
     return arrayListNames;
-
 }
 
 function displayList(listName) {
@@ -120,6 +157,7 @@ function displayList(listName) {
     list.classList.add('panel-list');
     list.classList.add('panel-click');
     list.textContent = listName;
+    list.id = listName;
     if (newCustomList.classList.contains("hidden"))
         list.classList.add("hidden")
     list.addEventListener("click", panelClickActive);
@@ -128,16 +166,11 @@ function displayList(listName) {
     optionList.value = listName;
     list.addEventListener("click", chosenList);
     dataCustomList.appendChild(optionList);
-
-
 }
-
 
 function displayAllLists() {
     var names = getListNames();
-    console.log(names)
     for (name of names) {
-        console.log(name);
         displayList(name);
     }
 }
@@ -145,6 +178,7 @@ function displayAllLists() {
 function toggleNewListPanel() {
     newListWindow.classList.toggle("show-info");
 }
+
 
 function checkFilter() {
     var filterId = document.querySelector(".active").id;
@@ -161,6 +195,13 @@ function checkFilter() {
             displayImportant();
             break;
         }
+
+        default: {
+            displayTasksFromlist(filterId);
+
+            console.log(filterId);
+            break;
+        }
     }
 }
 
@@ -170,11 +211,16 @@ function initialize() {
 }
 
 function chosenList(event) {
+    var id = event.target.id;
+    displayTasksFromlist(id);
+}
+
+function displayTasksFromlist(idList) {
+
     clearPanel();
     var tasks = getAll();
-    var listName = event.target.textContent;
     for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].list == listName) {
+        if (tasks[i].list == idList) {
             displayTask(tasks[i]);
         }
     }
@@ -247,6 +293,7 @@ function submitTask() {
         }
         displayTask(newTask);
         message("Task successfully created!");
+        checkFilter();
     }
 }
 
@@ -281,8 +328,12 @@ function getAll() {
 
 }
 
+
+
+
 function createTask() {
     var colorChosen = inputColor.value ? inputColor.value : '#add8e6';
+
     return {
         title: inputTitle.value.trim(),
         description: inputDescription.value.trim(),
@@ -311,6 +362,8 @@ function displayTask(task) {
     var taskName = document.createElement('span');
     taskName.classList.add('task-name');
     taskName.textContent = task.title;
+
+    taskName.addEventListener("click", showTaskInfo);
     var important = document.createElement('div');
     important.classList.add('wrapper-input-important');
     var inputImportant = document.createElement("input");
@@ -323,8 +376,12 @@ function displayTask(task) {
     elemTask.appendChild(complete);
     elemTask.appendChild(taskName);
     elemTask.appendChild(important);
+
     taskWrapper.appendChild(elemTask);
 }
+
+
+
 
 function setImportant(event) {
     var id = event.target.parentElement.parentElement.id;
@@ -371,7 +428,7 @@ function validate() {
     if (!DescRegEx.test(inputDescription.value)) {
         inputDescription.parentElement.insertAdjacentHTML(
             "afterEnd",
-            "<div class='error-msg' style = ' margin-left:100px;margin-top:85px';><p>The description must have a maximum of 500 characters</p></div>"
+            "<div class='error-msg' style = ' margin-left:100px;margin-top:85px';><p>Description required and with a maximum of 500 characters</p></div>"
         );
         inputDescription.classList.add("error-input");
         validation = false;
