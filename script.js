@@ -76,10 +76,36 @@ var checkCustomList = document.getElementById("check-customList");
 var checkColorSelected = document.getElementById("check-task-color");
 var bntSaveChangesTask = document.getElementById("save-changes-task");
 var cancelChangesTasK = document.getElementById("cancel-changes-task");
+var btnRemoveTask = document.getElementById("remove-task");
+
 closeCheckModal.addEventListener("click", toggleCheckModal);
-
 bntSaveChangesTask.addEventListener("click", saveChangesTask);
+btnRemoveTask.addEventListener("click", toggleRemoveWindow)
 
+// remove window
+
+var removeWindow = document.querySelector(".remove-window");
+var confirmRemove = document.getElementById("confirm-remove");
+var cancelRemove = document.getElementById("cancel-remove");
+
+cancelRemove.addEventListener("click", toggleRemoveWindow);
+confirmRemove.addEventListener("click", removeTask);
+
+function removeTask() {
+
+    var id = checkTitle.dataset.id;
+    removeItem(id);
+    checkFilter();
+    message('Task successfully removed');
+    toggleCheckModal();
+    toggleRemoveWindow();
+
+}
+
+function toggleRemoveWindow() {
+    removeWindow.classList.toggle("show-info");
+    removeWindow.classList.toggle("high-z")
+}
 
 function showTaskInfo(event) {
     var id = event.currentTarget.parentElement.id
@@ -105,8 +131,6 @@ function saveChangesTask() {
     task.list = checkCustomList.value;
     task.color = checkColorSelected.value;
     setItem(task);
-
-
 
     toggleCheckModal();
     checkFilter();
@@ -298,33 +322,44 @@ function submitTask() {
 }
 
 function setItem(item) {
-    var arrayTodo = getAll();
-    var index = arrayTodo.findIndex(x => x.id === item.id);
-    if (index === -1) arrayTodo.push(item);
-    else arrayTodo[index] = item
-    localStorage.setItem('todo', JSON.stringify(arrayTodo));
+    var tasks = getAll();
+    var index = tasks.findIndex(x => x.id === item.id);
+    if (index === -1) tasks.push(item);
+    else tasks[index] = item
+    localStorage.setItem('todo', JSON.stringify(tasks));
 
 }
 
 function getItem(id) {
-    var arrayTodo = getAll();
+    var tasks = getAll();
     var item;
-    for (elem of arrayTodo) {
+    for (elem of tasks) {
         if (elem.id == id) item = elem;
     }
     return item;
 }
 
+
+function removeItem(id) {
+
+    var tasks = getAll();
+    var index = tasks.findIndex(x => x.id === id);
+    tasks.splice(index, 1);
+    localStorage.setItem('todo', JSON.stringify(tasks));
+
+}
+
+
 function getAll() {
     try {
-        var arrayTodo = JSON.parse(localStorage.getItem('todo'));
-        if (!arrayTodo) {
-            arrayTodo = [];
+        var tasks = JSON.parse(localStorage.getItem('todo'));
+        if (!tasks) {
+            tasks = [];
         }
     } catch {
-        var arrayTodo = [];
+        var tasks = [];
     }
-    return arrayTodo;
+    return tasks;
 
 }
 

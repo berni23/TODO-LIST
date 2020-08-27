@@ -100,6 +100,12 @@ main {
 
 }
 
+#remove-task,
+#confirm-remove {
+
+    color: red;
+}
+
 /* Style the buttons that are used to open and close the accordion panel */
 .accordion {
     color: lightblue;
@@ -344,7 +350,8 @@ main {
 
 .info-window,
 .remove-window,
-.new-list-window {
+.new-list-window,
+.remove-window {
     position: fixed;
     top: 40%;
     left: 40%;
@@ -370,6 +377,12 @@ main {
     z-index: 2;
 }
 
+
+
+.high-z {
+
+    z-index: 10;
+}
 
 /* Responsiveness*/
 @media (max-width: 1400px) {
