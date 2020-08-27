@@ -363,7 +363,13 @@ function displayTasksFromlist(idList) {
     }
     taskTitle.textContent = idList.toUpperCase();
     taskTitle.dataset.id = idList;
-    titleWrapper.addEventListener("click", showRemoveListWindow);
+    titleWrapper.addEventListener("mouseover", showRemoveListWindow);
+    titleWrapper.addEventListener("mouseout", function () {
+
+        console.log("mouseout");
+        removeListWindow.classList.remove("show-info");
+        removeListWindow.classList.add("hidden");
+    })
 
 
 }
