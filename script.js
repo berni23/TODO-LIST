@@ -5,6 +5,8 @@ var lists = document.querySelectorAll(".panel-list");
 var panelClick = document.getElementsByClassName("panel-click");
 var panelTask = document.getElementsByClassName("panel-task");
 var taskTitle = document.querySelector(".task-title");
+var btnTitleWrapper = document.querySelector(".btn-title-wrapper");
+var titleWrapper = document.querySelector(".title-wrapper")
 var filterTodo = document.getElementById("filter-todo");
 var filterImportant = document.getElementById("filter-important");
 var filterCompleted = document.getElementById("filter-completed");
@@ -24,6 +26,8 @@ var newCustomList = document.getElementById("new-custom-list");
 var inputList = document.getElementById("input-list");
 var infoWindow = document.querySelector(".info-window");
 var newListWindow = document.querySelector(".new-list-window");
+
+var colorsList = ["purple", "green", "yellow", "orange", "grey", "pink", "blue"];
 newCustomList.addEventListener("click", toggleNewListPanel);
 
 var btnCreateList = document.getElementById("list-created");
@@ -81,6 +85,7 @@ var btnRemoveTask = document.getElementById("remove-task");
 closeCheckModal.addEventListener("click", toggleCheckModal);
 bntSaveChangesTask.addEventListener("click", saveChangesTask);
 btnRemoveTask.addEventListener("click", toggleRemoveWindow)
+cancelChangesTasK.addEventListener("click", toggleCheckModal)
 
 // remove window
 
@@ -91,15 +96,113 @@ var cancelRemove = document.getElementById("cancel-remove");
 cancelRemove.addEventListener("click", toggleRemoveWindow);
 confirmRemove.addEventListener("click", removeTask);
 
-function removeTask() {
+// remove list window
 
+var btnRenameList = document.getElementById("button-rename-list");
+var btnRemoveList = document.getElementById("button-remove-list");
+var btnCloseListWindow = document.getElementById("close-list-window");
+var removeListWindow = document.querySelector(".remove-list-window");
+var btnCloseListWindow = document.getElementById("close-list-window");
+var listNameWindow = document.querySelector(".change-listName-window");
+var listChangeName = document.getElementById("list-changeName");
+var listCancelName = document.getElementById("list-cancelName");
+
+
+listChangeName.addEventListener("click", changeListName);
+listCancelName.addEventListener("click", toggleListNameWindow);
+
+function toggleListNameWindow() {
+    listNameWindow.classList.toggle("show-info");
+}
+
+var inputChangeList = document.getElementById("input-changeList");
+
+function changeListName() {
+
+    var currentListName = taskTitle.dataset.id;
+    clearErrors();
+    var listNames = getListNames();
+    var nameList = inputChangeList.value;
+    if (nameList == "") {
+        inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name can't be blank</p></div>")
+        inputList.classList.add("error-input");
+        return;
+    }
+    if (listNames.includes(nameList)) {
+        inputList.insertAdjacentHTML('beforeBegin', "<div class='error-msg' ><p>List name already exists</p></div>")
+        inputList.classList.add("error-input")
+        return;
+    }
+
+    try {
+
+        var index = listNames.findIndex(x == currentListName);
+        listNames[index] = nameList;
+        localStorage.setItem("listNames", JSON.stringify(arrayListNames));
+        toggleListNameWindow();
+        toggleRemoveListWindow();
+        inputList.value = "";
+        message("List successfully created!");
+        clearErrors();
+        var displayedList = document.getElementById(currentListName);
+        displayedList.textContent = nameList;
+        displayedList.id = nameList;
+        localStorage.setItem("listNames", listNames);
+    } catch {
+
+        message("list could not be renamed");
+    }
+
+}
+
+btnCloseListWindow.addEventListener("click", toggleRemoveListWindow);
+btnRemoveList.addEventListener("click", toggleConfirmRemoveListWindow);
+btnRenameList.addEventListener("click", toggleListNameWindow);
+
+var confirmRemoveListWindow = document.querySelector(".confirm-remove-list-window");
+var btnCloseConfirmRemove = document.getElementById("close-confirm-remove");
+var btnRemoveListConfirmed = document.getElementById("remove-list-confirmed");
+
+btnRemoveListConfirmed.addEventListener("click", removeList);
+btnCloseConfirmRemove.addEventListener("click", function () {
+    confirmRemoveListWindow.classList.remove("show-list");
+    toggleRemoveListWindow();
+})
+
+
+function removeList() {
+    var tasks = getAll();
+    var listNames = getListNames();
+    var listName = taskTitle.dataset.id;
+
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].list === listName) {
+            tasks.splice(i, 1);
+        }
+    }
+    setAll(tasks);
+    var listIndex = listNames.findIndex(x => listName);
+    listNames.splice(listIndex, 1);
+    setListNames(listNames);
+    document.getElementById(listName).remove();
+    filterTodo.classList.add("active");
+    checkFilter();
+    toggleConfirmRemoveListWindow();
+    toggleRemoveListWindow();
+    message("list sucessfully removed");
+}
+
+function toggleConfirmRemoveListWindow() {
+    confirmRemoveListWindow.classList.toggle("show-info");
+}
+
+function removeTask() {
     var id = checkTitle.dataset.id;
     removeItem(id);
     checkFilter();
     message('Task successfully removed');
     toggleCheckModal();
     toggleRemoveWindow();
-
 }
 
 function toggleRemoveWindow() {
@@ -108,32 +211,40 @@ function toggleRemoveWindow() {
 }
 
 function showTaskInfo(event) {
-    var id = event.currentTarget.parentElement.id
-    var task = getItem(id);
-    checkTitle.value = task.title;
-    checkTitle.dataset.id = id;
-    checkDescription.value = task.description;
-    checkCompleted.checked = task.completed;
-    checkImportant.checked = task.important;
-    checkCustomList.value = task.list;
-    checkColorSelected.value = task.color;
-    toggleCheckModal();
 
+    if (event.target.classList.contains("task") || event.target.classList.contains("task-name")) {
+        var id = event.currentTarget.id
+        var task = getItem(id);
+        checkTitle.value = task.title;
+        checkTitle.dataset.id = id;
+        checkDescription.value = task.description;
+        checkCompleted.checked = task.completed;
+        checkImportant.checked = task.important;
+        checkCustomList.value = task.list;
+        if (task.color == 'lightblue')
+            checkColorSelected.value = "";
+        else
+            checkColorSelected.value = task.color;
+        toggleCheckModal();
+    }
 }
 
 function saveChangesTask() {
-    var id = checkTitle.dataset.id;
-    var task = getItem(id);
-    task.title = checkTitle.value;
-    task.description = checkDescription.value
-    task.completed = checkCompleted.checked;
-    task.important = checkImportant.checked;
-    task.list = checkCustomList.value;
-    task.color = checkColorSelected.value;
-    setItem(task);
 
-    toggleCheckModal();
-    checkFilter();
+    if (validateUpdate()) {
+        var id = checkTitle.dataset.id;
+        var task = getItem(id);
+        task.title = checkTitle.value;
+        task.description = checkDescription.value
+        task.completed = checkCompleted.checked;
+        task.important = checkImportant.checked;
+        task.list = checkCustomList.value;
+        task.color = checkColorSelected.value;
+        setItem(task);
+        toggleCheckModal();
+        checkFilter();
+        message("task sucessfully updated!");
+    }
 }
 
 function toggleCheckModal() {
@@ -173,6 +284,10 @@ function getListNames() {
         var arrayListNames = [];
     }
     return arrayListNames;
+}
+
+function setListNames(arrayListNames) {
+    localStorage.setItem("listNames", JSON.stringify(arrayListNames));
 }
 
 function displayList(listName) {
@@ -222,8 +337,6 @@ function checkFilter() {
 
         default: {
             displayTasksFromlist(filterId);
-
-            console.log(filterId);
             break;
         }
     }
@@ -248,6 +361,25 @@ function displayTasksFromlist(idList) {
             displayTask(tasks[i]);
         }
     }
+    taskTitle.textContent = idList.toUpperCase();
+    taskTitle.dataset.id = idList;
+    titleWrapper.addEventListener("click", showRemoveListWindow);
+
+
+}
+
+function showRemoveListWindow() {
+    console.log("click!")
+    if (taskTitle.dataset.id != "null") {
+        removeListWindow.classList.add("show-info");
+        removeListWindow.classList.remove("hidden");
+    }
+}
+
+
+function toggleRemoveListWindow() {
+    removeListWindow.classList.toggle("show-info");
+    removeListWindow.classList.toggle("hidden")
 }
 
 function displayTODO() {
@@ -258,6 +390,10 @@ function displayTODO() {
             displayTask(tasks[i]);
         }
     }
+    taskTitle.textContent = "TASK LIST";
+    taskTitle.dataset.id = null;
+    titleWrapper.removeEventListener("click", showRemoveListWindow);
+
 }
 
 function displayCompleted() {
@@ -268,6 +404,11 @@ function displayCompleted() {
             displayTask(tasks[i]);
         }
     }
+    taskTitle.textContent = "COMPLETED";
+    taskTitle.dataset.id = null;
+
+    titleWrapper.removeEventListener("click", showRemoveListWindow);
+
 }
 
 function displayImportant() {
@@ -278,6 +419,9 @@ function displayImportant() {
             displayTask(tasks[i]);
         }
     }
+    taskTitle.textContent = "IMPORTANT";
+    taskTitle.dataset.id = null;
+    titleWrapper.removeEventListener("click", showRemoveListWindow);
 
 }
 
@@ -349,7 +493,6 @@ function removeItem(id) {
 
 }
 
-
 function getAll() {
     try {
         var tasks = JSON.parse(localStorage.getItem('todo'));
@@ -363,12 +506,12 @@ function getAll() {
 
 }
 
-
-
+function setAll(tasks) {
+    localStorage.setItem('todo', JSON.stringify(tasks))
+}
 
 function createTask() {
-    var colorChosen = inputColor.value ? inputColor.value : '#add8e6';
-
+    var colorChosen = inputColor.value ? inputColor.value : 'lightblue'; //#add8e6';
     return {
         title: inputTitle.value.trim(),
         description: inputDescription.value.trim(),
@@ -398,7 +541,7 @@ function displayTask(task) {
     taskName.classList.add('task-name');
     taskName.textContent = task.title;
 
-    taskName.addEventListener("click", showTaskInfo);
+    elemTask.addEventListener("click", showTaskInfo);
     var important = document.createElement('div');
     important.classList.add('wrapper-input-important');
     var inputImportant = document.createElement("input");
@@ -411,12 +554,8 @@ function displayTask(task) {
     elemTask.appendChild(complete);
     elemTask.appendChild(taskName);
     elemTask.appendChild(important);
-
     taskWrapper.appendChild(elemTask);
 }
-
-
-
 
 function setImportant(event) {
     var id = event.target.parentElement.parentElement.id;
@@ -425,6 +564,8 @@ function setImportant(event) {
     else task.important = false;
     setItem(task);
     checkFilter();
+    checkModal.classList.remove("show-modal");
+
 }
 
 function setComplete(event) {
@@ -447,29 +588,6 @@ function resetForm() {
     inputCompleted.checked = false;
 }
 
-function validate() {
-    let validation = true;
-    var TitleRegEx = /\b.{3,50}\b/ //  whatever between 3 and 50 chars
-    var DescRegEx = /\b.{1,500}\b/ //  whatever between 1 and 500 chars
-    clearErrors();
-    if (!TitleRegEx.test(inputTitle.value)) {
-        inputTitle.parentElement.insertAdjacentHTML(
-            "beforeend",
-            "<div class='error-msg' style = 'margin-left: 100px; margin-top:25px'><p>Title must be between 1 and 60 characters</p></div>"
-        );
-        inputTitle.classList.add("error-input")
-        validation = false;
-    }
-    if (!DescRegEx.test(inputDescription.value)) {
-        inputDescription.parentElement.insertAdjacentHTML(
-            "afterEnd",
-            "<div class='error-msg' style = ' margin-left:100px;margin-top:85px';><p>Description required and with a maximum of 500 characters</p></div>"
-        );
-        inputDescription.classList.add("error-input");
-        validation = false;
-    }
-    return validation; // true if validation passed, else false
-}
 
 function clearErrors() {
     var errorMsg = document.querySelectorAll(".error-msg");
@@ -497,17 +615,95 @@ function idTask() {
     }
 }
 
-/*function allStorage() {
-    var values = [];
-    var keys = Object.keys(localStorage);
-    console.log(keys);
-    var i = 0;
-    while (i < keys.length) {
-        values.push(JSON.parse(localStorage.getItem(keys[i])));
-        i++;
+
+/* ---------------------------------
+Validation functions
+--------------------------------*/
+
+
+
+function validate() {
+    let validation = true;
+    var TitleRegEx = /\b.{3,50}\b/ //  whatever between 3 and 50 chars
+    var DescRegEx = /\b.{1,500}\b/ //  whatever between 1 and 500 chars
+    clearErrors();
+    if (!TitleRegEx.test(inputTitle.value)) {
+        inputTitle.parentElement.insertAdjacentHTML(
+            "beforeend",
+            "<div class='error-msg' style = 'margin-left: 100px; margin-top:25px'><p>Title must be between 3 and 50 characters</p></div>"
+        );
+        inputTitle.classList.add("error-input")
+        validation = false;
     }
-    return values;
-    //return keys;
+    if (!DescRegEx.test(inputDescription.value)) {
+        inputDescription.parentElement.insertAdjacentHTML(
+            "afterEnd",
+            "<div class='error-msg' style = ' margin-left:100px;margin-top:85px';><p>Description required and with a maximum of 500 characters</p></div>"
+        );
+        inputDescription.classList.add("error-input");
+        validation = false;
+    }
+
+    var listNames = getListNames();
+    if (!listNames.includes(inputCustomList.value) && inputCustomList.value != "") {
+
+        inputCustomList.parentElement.insertAdjacentHTML(
+            "beforeEnd",
+            "<div class='error-msg' style = 'margin-left:100px;margin-top:25px';><p>Please choose an existing list name or leave it blank</p></div>");
+        inputCustomList.classList.add("error-input");
+        validation = false;
+    }
+
+    if (!colorsList.includes(inputColor.value) && inputColor.value != "") {
+
+        inputColor.parentElement.insertAdjacentHTML(
+            "beforeEnd",
+            "<div class='error-msg' style = 'margin-left:100px;margin-top:25px';><p>Please choose an existing color or leave it blank</p></div>");
+        inputColor.classList.add("error-input");
+        validation = false
+    }
+
+    return validation; // true if validation passed, else false
 }
 
-*/
+function validateUpdate() {
+    let validation = true;
+    var TitleRegEx = /\b.{3,50}\b/ //  whatever between 3 and 50 chars
+    var DescRegEx = /\b.{1,500}\b/ //  whatever between 1 and 500 chars
+    clearErrors();
+    if (!TitleRegEx.test(checkTitle.value)) {
+        checkTitle.parentElement.insertAdjacentHTML(
+            "beforeend",
+            "<div class='error-msg' style = 'margin-left: 100px; margin-top:25px'><p>Title must be between 1 and 50 characters</p></div>"
+        );
+        checkTitle.classList.add("error-input")
+        validation = false;
+    }
+    if (!DescRegEx.test(checkDescription.value)) {
+        checkDescription.parentElement.insertAdjacentHTML(
+            "afterEnd",
+            "<div class='error-msg' style = ' margin-left:100px;margin-top:85px';><p>Description required and with a maximum of 500 characters</p></div>"
+        );
+        checkDescription.classList.add("error-input");
+        validation = false;
+    }
+
+    var listNames = getListNames();
+    if (!listNames.includes(checkCustomList.value) && checkCustomList.value != "") {
+        checkCustomList.parentElement.insertAdjacentHTML(
+            "beforeEnd",
+            "<div class='error-msg' style = 'margin-left:100px;margin-top:25px';><p>Please choose an existing list name or leave it blank</p></div>");
+        checkCustomList.classList.add("error-input");
+        validation = false;
+    }
+
+    if (!colorsList.includes(checkColorSelected.value) && checkColorSelected.value != "") {
+        checkColorSelected.parentElement.insertAdjacentHTML(
+            "beforeEnd",
+            "<div class='error-msg' style = 'margin-left:100px;margin-top:25px';><p>Please choose an existing color or leave it blank</p></div>");
+        checkColorSelected.classList.add("error-input");
+        validation = false
+    }
+
+    return validation; // true if validation passed, else false
+}

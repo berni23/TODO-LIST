@@ -17,7 +17,7 @@
             <p>MY TASKS</p>
         </div>
     </header>
-    <div class="info-window"> Task successfully created!</div>
+    <div class="info-window"></div>
     <div class="new-list-window">
         <p> Select custom list name</p>
         <input id="input-list" type="text"><br>
@@ -26,15 +26,37 @@
             <button id="list-created">Create</button>
             <button id="list-canceled">Cancel</button>
         </div>
-
     </div>
 
+    <div class="change-listName-window">
+        <p> Change list name</p>
+        <input id="input-changeList" type="text"><br>
+
+        <div class="buttons-wrapper">
+            <button id="list-changeName">Change name</button>
+            <button id="list-cancelName">Cancel</button>
+        </div>
+    </div>
     <div class="remove-window">
         <p>This operation can't be undone, proceed anyway?</p>
         <div class="buttons-wrapper">
             <button id="confirm-remove">Remove</button>
             <button id="cancel-remove">Cancel</button>
         </div>
+    </div>
+    <div class="remove-list-window hidden">
+        <div class="btn-title-wrapper">
+            <button id="button-rename-list">Rename list</button>
+            <button id="button-remove-list">Remove list </button>
+            <button id="close-list-window">Close</button>
+        </div>
+    </div>
+
+    <div class="confirm-remove-list-window">
+        <p>When removing the list, all the tasks within it will also be removed, proceed anyway?</p>
+        <button id="remove-list-confirmed">Remove list </button>
+        <button id="close-confirm-remove">Close</button>
+    </div>
     </div>
     <main>
         <div class="sidebar">
@@ -54,17 +76,18 @@
                     <span class="iconify plus-icon" data-icon="ant-design:plus-circle-outlined"
                         data-inline="false"></span>
                 </div>
-                <div class="panel panel-list panel-click hidden">
+                <!--<div class="panel panel-list panel-click hidden">
                     list 1
                 </div>
                 <div class="panel panel-list panel-click hidden">
                     list 2
-                </div>
+                </div>-->
             </div>
         </div>
         <div class="todo-content">
             <div class="title-wrapper">
                 <h4>Completed</h4>
+
                 <h2 class="task-title">TASK LIST</h2>
                 <h4>Important</h4>
             </div>
@@ -133,7 +156,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal check-modal">
         <div class="modal-content">
             <span class="close-button" id="close-check-modal">&times;</span>
