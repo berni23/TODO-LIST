@@ -49,13 +49,13 @@
             <button id="cancel-remove">Cancel</button>
         </div>
     </div>
-    <div class="remove-list-window hidden">
+    <!--<div class="remove-list-window hidden">
         <div class="btn-title-wrapper">
             <button id="button-rename-list">Rename list</button>
             <button id="button-remove-list">Remove list </button>
             <button id="close-list-window">Close</button>
         </div>
-    </div>
+    </div>-->
 
     <div class="confirm-remove-list-window">
         <p>When removing the list, all the tasks within it will also be removed, proceed anyway?</p>
@@ -86,9 +86,19 @@
         <div class="todo-content">
             <div class="title-wrapper">
                 <h4>Completed</h4>
+                <div>
+                    <h2 class="task-title">TASK LIST</h2>
+                    <div class="remove-list-window">
+                        <div class="btn-title-wrapper">
+                            <button id="button-rename-list">Rename list</button>
+                            <button id="button-remove-list">Remove list </button>
+                            <button id="close-list-window">Close</button>
+                        </div>
+                    </div>
+                </div>
 
-                <h2 class="task-title">TASK LIST</h2>
                 <h4>Important</h4>
+
             </div>
             <div class="task-wrapper">
             </div>
@@ -98,7 +108,7 @@
     </main>
 
 
-    <div id="activate-window" style="height:100px;width:100px; position:absolute;top: 20%; left: 50%; z-index:100">
+    <!-- <div id="activate-window" style="height:200px;width:200px; position:absolute;top: 20%; left: 50%; z-index:-1">-->
     </div>
     <div class="modal modal-create-form">
         <div class="modal-content">

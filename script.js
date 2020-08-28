@@ -26,13 +26,50 @@ var newCustomList = document.getElementById("new-custom-list");
 var inputList = document.getElementById("input-list");
 var infoWindow = document.querySelector(".info-window");
 var newListWindow = document.querySelector(".new-list-window");
-
 var colorsList = ["purple", "green", "yellow", "orange", "grey", "pink", "blue"];
-newCustomList.addEventListener("click", toggleNewListPanel);
 
 var btnCreateList = document.getElementById("list-created");
 var btnCancelList = document.getElementById("list-canceled");
+var confirmRemoveListWindow = document.querySelector(".confirm-remove-list-window");
+console.log(confirmRemoveListWindow)
+var btnCloseConfirmRemove = document.getElementById("close-confirm-remove");
+var btnRemoveListConfirmed = document.getElementById("remove-list-confirmed");
+var inputChangeList = document.getElementById("input-changeList");
 
+
+// Modal for checking task info (on task title clicked)
+var checkModal = document.querySelector(".check-modal");
+var closeCheckModal = document.getElementById("close-check-modal");
+var checkTitle = document.getElementById("check-input-title");
+var checkDescription = document.getElementById("check-description");
+var checkCompleted = document.getElementById("check-completed");
+var checkImportant = document.getElementById("check-important");
+var checkCustomList = document.getElementById("check-customList");
+var checkColorSelected = document.getElementById("check-task-color");
+var bntSaveChangesTask = document.getElementById("save-changes-task");
+var cancelChangesTasK = document.getElementById("cancel-changes-task");
+var btnRemoveTask = document.getElementById("remove-task");
+
+// remove window
+var removeWindow = document.querySelector(".remove-window");
+var confirmRemove = document.getElementById("confirm-remove");
+var cancelRemove = document.getElementById("cancel-remove");
+
+// remove list window
+
+var btnRenameList = document.getElementById("button-rename-list");
+var btnRemoveList = document.getElementById("button-remove-list");
+var btnCloseListWindow = document.getElementById("close-list-window");
+var removeListWindow = document.querySelector(".remove-list-window");
+var listNameWindow = document.querySelector(".change-listName-window");
+var listChangeName = document.getElementById("list-changeName");
+var listCancelName = document.getElementById("list-cancelName");
+
+// searchbar
+var inputSearch = document.querySelector(".searchbar");
+
+
+newCustomList.addEventListener("click", toggleNewListPanel);
 btnCreateList.addEventListener("click", createList);
 btnCancelList.addEventListener("click", toggleNewListPanel);
 
@@ -47,38 +84,17 @@ filterTodo.addEventListener("click", displayTODO);
 filterImportant.addEventListener("click", displayImportant);
 filterCompleted.addEventListener("click", displayCompleted);
 
+
+btnCloseListWindow.addEventListener("click", toggleRemoveListWindow);
+btnRemoveList.addEventListener("click", toggleConfirmRemoveListWindow);
+btnRenameList.addEventListener("click", toggleListNameWindow);
+
+
 for (let i = 0; i < panelClick.length; i++) {
     panelClick[i].addEventListener("click", panelClickActive);
 }
 
-
-
-
-// searchbar
-
-
-var inputSearch = document.querySelector(".searchbar");
-
-
 inputSearch.addEventListener("input", handleSearch);
-
-function handleSearch(event) {
-
-    clearPanel();
-
-    var inputText = event.target.value.trim().toLowerCase();
-    var tasks = getAll();
-
-    for (task of tasks) {
-        var title = task.title.trim().toLowerCase();
-        if (title.startsWith(inputText)) {
-
-            displayTask(task);
-        }
-
-    }
-
-}
 
 function panelClickActive(event) {
     var activeOption = document.querySelector(".active");
@@ -98,50 +114,33 @@ customListSelector.addEventListener("click", function () {
     }
 });
 
-// Modal for checking task info (on task title clicked)
-var checkModal = document.querySelector(".check-modal");
-var closeCheckModal = document.getElementById("close-check-modal");
-var checkTitle = document.getElementById("check-input-title");
-var checkDescription = document.getElementById("check-description");
-var checkCompleted = document.getElementById("check-completed");
-var checkImportant = document.getElementById("check-important");
-var checkCustomList = document.getElementById("check-customList");
-var checkColorSelected = document.getElementById("check-task-color");
-var bntSaveChangesTask = document.getElementById("save-changes-task");
-var cancelChangesTasK = document.getElementById("cancel-changes-task");
-var btnRemoveTask = document.getElementById("remove-task");
+cancelRemove.addEventListener("click", function () {
+    toggleRemoveWindow();
+    toggleConfirmRemoveListWindow();
+});
+confirmRemove.addEventListener("click", removeTask);
 
 closeCheckModal.addEventListener("click", toggleCheckModal);
 bntSaveChangesTask.addEventListener("click", saveChangesTask);
 btnRemoveTask.addEventListener("click", toggleRemoveWindow)
 cancelChangesTasK.addEventListener("click", toggleCheckModal)
-
-// remove window
-
-var removeWindow = document.querySelector(".remove-window");
-var confirmRemove = document.getElementById("confirm-remove");
-var cancelRemove = document.getElementById("cancel-remove");
-
-cancelRemove.addEventListener("click", toggleRemoveWindow);
-confirmRemove.addEventListener("click", removeTask);
-
-// remove list window
-
-var btnRenameList = document.getElementById("button-rename-list");
-var btnRemoveList = document.getElementById("button-remove-list");
-var btnCloseListWindow = document.getElementById("close-list-window");
-var removeListWindow = document.querySelector(".remove-list-window");
-var btnCloseListWindow = document.getElementById("close-list-window");
-var listNameWindow = document.querySelector(".change-listName-window");
-var listChangeName = document.getElementById("list-changeName");
-var listCancelName = document.getElementById("list-cancelName");
-
-
 listChangeName.addEventListener("click", changeListName);
-listCancelName.addEventListener("click", toggleListNameWindow);
+listCancelName.addEventListener("click", function () {
+
+    toggleListNameWindow();
+    toggleRemoveListWindow();
+})
 
 
-var inputChangeList = document.getElementById("input-changeList");
+
+
+initialize();
+
+function initialize() {
+    displayTODO();
+    displayAllLists();
+}
+
 
 function changeListName() {
 
@@ -175,23 +174,15 @@ function changeListName() {
         displayedList.id = nameList;
         localStorage.setItem("listNames", listNames);
     } catch {
-
         message("list could not be renamed");
     }
 
 }
 
-btnCloseListWindow.addEventListener("click", toggleRemoveListWindow);
-btnRemoveList.addEventListener("click", toggleConfirmRemoveListWindow);
-btnRenameList.addEventListener("click", toggleListNameWindow);
-
-var confirmRemoveListWindow = document.querySelector(".confirm-remove-list-window");
-var btnCloseConfirmRemove = document.getElementById("close-confirm-remove");
-var btnRemoveListConfirmed = document.getElementById("remove-list-confirmed");
 
 btnRemoveListConfirmed.addEventListener("click", removeList);
 btnCloseConfirmRemove.addEventListener("click", function () {
-    confirmRemoveListWindow.classList.remove("show-list");
+    toggleConfirmRemoveListWindow();
     toggleRemoveListWindow();
 })
 
@@ -231,7 +222,6 @@ function removeTask() {
 
 function toggleRemoveWindow() {
     removeWindow.classList.toggle("show-info");
-    removeWindow.classList.toggle("high-z")
 }
 
 function showTaskInfo(event) {
@@ -272,14 +262,32 @@ function saveChangesTask() {
 }
 
 
-initialize();
+function handleSearch(event) {
+
+    clearPanel();
+
+    var inputText = event.target.value.trim().toLowerCase();
+    var tasks = getAll();
+
+    for (task of tasks) {
+        var title = task.title.trim().toLowerCase();
+        if (title.startsWith(inputText)) {
+
+            displayTask(task);
+        }
+
+    }
+
+}
 
 function createList() {
+
+    var listNameRegEx = /\b.{1,25}\b/ //  whatever between 1 and 25 chars
     clearErrors();
     var arrayListNames = getListNames();
     var nameList = inputList.value;
-    if (nameList == "") {
-        inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name can't be blank</p></div>")
+    if (!listNameRegEx.test(nameList)) {
+        inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name must be between 1 and 25 characters</p></div>")
         inputList.classList.add("error-input");
         return;
     }
@@ -363,43 +371,35 @@ function checkFilter() {
     }
 }
 
-function initialize() {
-    displayTODO();
-    displayAllLists();
-}
+
 
 function chosenList(event) {
     var id = event.target.id;
     displayTasksFromlist(id);
 }
 
-var activWindow = document.getElementById("activate-window");
+//var activWindow = document.getElementById("activate-window");
 
 function displayTasksFromlist(idList) {
 
     clearPanel();
     var tasks = getAll();
     for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].list == idList) {
+        if (tasks[i].list == idList && !tasks[i].completed) {
             displayTask(tasks[i]);
         }
     }
     taskTitle.textContent = idList.toUpperCase();
     taskTitle.dataset.id = idList;
-    activWindow.addEventListener("mouseover", showRemoveListWindow);
-    activWindow.addEventListener("mouseout", function () {
+    titleWrapper.addEventListener("mouseover", showRemoveListWindow)
+    /*activWindow.addEventListener("mouseover", showRemoveListWindow);
+    removeListWindow.addEventListener("mouseout", function () {
         console.log("mouseleave");
         removeListWindow.classList.remove("show-info");
         removeListWindow.classList.add("hidden");
-        removeListWindow.classList.remove("high-z")
-
-
-    })
-
+        removeListWindow.classList.remove("high-z")*/
 
 }
-
-
 
 function displayTODO() {
     clearPanel();
@@ -412,7 +412,6 @@ function displayTODO() {
     taskTitle.textContent = "TASK LIST";
     taskTitle.dataset.id = null;
     titleWrapper.removeEventListener("click", showRemoveListWindow);
-
 }
 
 function displayCompleted() {
@@ -425,7 +424,6 @@ function displayCompleted() {
     }
     taskTitle.textContent = "COMPLETED";
     taskTitle.dataset.id = null;
-
     titleWrapper.removeEventListener("click", showRemoveListWindow);
 
 }
@@ -441,7 +439,6 @@ function displayImportant() {
     taskTitle.textContent = "IMPORTANT";
     taskTitle.dataset.id = null;
     titleWrapper.removeEventListener("click", showRemoveListWindow);
-
 }
 
 
@@ -620,21 +617,16 @@ function idTask() {
         return id;
     }
 }
-
-
 //  Functions for toggling between show and hide
 
 function showRemoveListWindow() {
     console.log("click!")
     if (taskTitle.dataset.id != "null") {
-
-        titleWrapper.classList.add("high-z");
         removeListWindow.classList.add("show-info");
         removeListWindow.classList.remove("hidden");
         removeListWindow.classList.add("high-z");;
     }
 }
-
 
 function toggleCheckModal() {
     checkModal.classList.toggle("show-info");
@@ -651,7 +643,10 @@ function toggleConfirmRemoveListWindow() {
 }
 
 function toggleListNameWindow() {
+
+    console.log("fuck off!")
     listNameWindow.classList.toggle("show-info");
+    listNameWindow.classList.toggle("high-z");
 }
 
 
@@ -673,9 +668,11 @@ function handleKeyDown(event) {
     }
 }
 
-/* ---------------------------------
+/*
+----------------------------------
 Validation functions
-----------------------------------*/
+----------------------------------
+*/
 
 function validate() {
     let validation = true;
@@ -759,6 +756,5 @@ function validateUpdate() {
         checkColorSelected.classList.add("error-input");
         validation = false
     }
-
     return validation; // true if validation passed, else false
 }
