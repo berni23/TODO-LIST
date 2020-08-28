@@ -51,6 +51,35 @@ for (let i = 0; i < panelClick.length; i++) {
     panelClick[i].addEventListener("click", panelClickActive);
 }
 
+
+
+
+// searchbar
+
+
+var inputSearch = document.querySelector(".searchbar");
+
+
+inputSearch.addEventListener("input", handleSearch);
+
+function handleSearch(event) {
+
+    clearPanel();
+
+    var inputText = event.target.value.trim().toLowerCase();
+    var tasks = getAll();
+
+    for (task of tasks) {
+        var title = task.title.trim().toLowerCase();
+        if (title.startsWith(inputText)) {
+
+            displayTask(task);
+        }
+
+    }
+
+}
+
 function panelClickActive(event) {
     var activeOption = document.querySelector(".active");
     if (activeOption) activeOption.classList.remove("active");
@@ -111,9 +140,6 @@ var listCancelName = document.getElementById("list-cancelName");
 listChangeName.addEventListener("click", changeListName);
 listCancelName.addEventListener("click", toggleListNameWindow);
 
-function toggleListNameWindow() {
-    listNameWindow.classList.toggle("show-info");
-}
 
 var inputChangeList = document.getElementById("input-changeList");
 
@@ -192,9 +218,7 @@ function removeList() {
     message("list sucessfully removed");
 }
 
-function toggleConfirmRemoveListWindow() {
-    confirmRemoveListWindow.classList.toggle("show-info");
-}
+
 
 function removeTask() {
     var id = checkTitle.dataset.id;
@@ -247,9 +271,6 @@ function saveChangesTask() {
     }
 }
 
-function toggleCheckModal() {
-    checkModal.classList.toggle("show-info");
-}
 
 initialize();
 
@@ -352,7 +373,6 @@ function chosenList(event) {
     displayTasksFromlist(id);
 }
 
-
 var activWindow = document.getElementById("activate-window");
 
 function displayTasksFromlist(idList) {
@@ -379,23 +399,7 @@ function displayTasksFromlist(idList) {
 
 }
 
-function showRemoveListWindow() {
-    console.log("click!")
-    if (taskTitle.dataset.id != "null") {
 
-        titleWrapper.classList.add("high-z");
-        removeListWindow.classList.add("show-info");
-        removeListWindow.classList.remove("hidden");
-        removeListWindow.classList.add("high-z");;
-    }
-
-}
-
-
-function toggleRemoveListWindow() {
-    removeListWindow.classList.toggle("show-info");
-    removeListWindow.classList.toggle("hidden")
-}
 
 function displayTODO() {
     clearPanel();
@@ -440,23 +444,6 @@ function displayImportant() {
 
 }
 
-function toggleInfoWindow() {
-    infoWindow.classList.toggle("show-info");
-}
-
-function toggleModal() {
-    modal.classList.toggle("show-modal");
-}
-
-function windowOnClick() {
-    modal.classList.remove("show-modal");
-}
-
-function handleKeyDown(event) {
-    if (event.keyCodioe === 27) { // hide modal on esc key pressed
-        modal.classList.remove("show-modal");
-    }
-}
 
 function cancelTask() {
     toggleModal();
@@ -538,7 +525,7 @@ function createTask() {
     }
 }
 
-function displayTask(task, completed = false) {
+function displayTask(task) {
     var elemTask = document.createElement('div');
     elemTask.id = task.id;
     elemTask.classList.add('task');
@@ -571,6 +558,7 @@ function displayTask(task, completed = false) {
     elemTask.appendChild(important);
 
     if (inputComplete.checked) elemTask.classList.add("completed");
+    if (inputImportant.checked) elemTask.classList.add("important");
     taskWrapper.appendChild(elemTask);
 
 }
@@ -634,11 +622,60 @@ function idTask() {
 }
 
 
+//  Functions for toggling between show and hide
+
+function showRemoveListWindow() {
+    console.log("click!")
+    if (taskTitle.dataset.id != "null") {
+
+        titleWrapper.classList.add("high-z");
+        removeListWindow.classList.add("show-info");
+        removeListWindow.classList.remove("hidden");
+        removeListWindow.classList.add("high-z");;
+    }
+}
+
+
+function toggleCheckModal() {
+    checkModal.classList.toggle("show-info");
+}
+
+
+function toggleRemoveListWindow() {
+    removeListWindow.classList.toggle("show-info");
+    removeListWindow.classList.toggle("hidden")
+}
+
+function toggleConfirmRemoveListWindow() {
+    confirmRemoveListWindow.classList.toggle("show-info");
+}
+
+function toggleListNameWindow() {
+    listNameWindow.classList.toggle("show-info");
+}
+
+
+function toggleInfoWindow() {
+    infoWindow.classList.toggle("show-info");
+}
+
+function toggleModal() {
+    modal.classList.toggle("show-modal");
+}
+
+function windowOnClick() {
+    modal.classList.remove("show-modal");
+}
+
+function handleKeyDown(event) {
+    if (event.keyCodioe === 27) { // hide modal on esc key pressed
+        modal.classList.remove("show-modal");
+    }
+}
+
 /* ---------------------------------
 Validation functions
---------------------------------*/
-
-
+----------------------------------*/
 
 function validate() {
     let validation = true;

@@ -185,6 +185,11 @@ main {
     text-decoration: line-through;
 }
 
+.important {
+
+    font-weight: bold;
+}
+
 .wrapper-input-important {
 
     position: absolute;
@@ -385,6 +390,27 @@ main {
 
 .high-z {
     z-index: 10;
+}
+
+/* searchbar*/
+
+.search-container {
+
+    color: burlywood;
+    display: flex;
+}
+
+.search-container .iconify {
+
+    width: 30px;
+    height: 30px;
+
+}
+
+.searchbar {
+
+    color: burlywood;
+    border: 2px solid burlywood
 }
 
 /* Responsiveness*/
