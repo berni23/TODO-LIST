@@ -84,7 +84,15 @@ filterImportant.addEventListener("click", displayImportant);
 filterCompleted.addEventListener("click", displayCompleted);
 
 
-btnCloseListWindow.addEventListener("click", toggleRemoveListWindow);
+btnCloseListWindow.addEventListener("click", function () {
+
+    windowListClosed = false;
+    setTimeout(() => windowListClosed = true, 1000);
+    toggleRemoveListWindow();
+
+})
+
+
 btnRemoveList.addEventListener("click", toggleConfirmRemoveListWindow);
 btnRenameList.addEventListener("click", toggleListNameWindow);
 
@@ -121,8 +129,8 @@ confirmRemove.addEventListener("click", removeTask);
 
 closeCheckModal.addEventListener("click", toggleCheckModal);
 bntSaveChangesTask.addEventListener("click", saveChangesTask);
-btnRemoveTask.addEventListener("click", toggleRemoveWindow)
-cancelChangesTasK.addEventListener("click", toggleCheckModal)
+btnRemoveTask.addEventListener("click", toggleRemoveWindow);
+cancelChangesTasK.addEventListener("click", toggleCheckModal);
 listChangeName.addEventListener("click", changeListName);
 listCancelName.addEventListener("click", function () {
 
@@ -130,16 +138,12 @@ listCancelName.addEventListener("click", function () {
     toggleRemoveListWindow();
 })
 
-
-
-
 initialize();
 
 function initialize() {
     displayTODO();
     displayAllLists();
 }
-
 
 function changeListName() {
 
@@ -169,8 +173,8 @@ function changeListName() {
     clearErrors();
     var displayedList = document.getElementById(currentListName);
     displayedList.textContent = nameList;
-    displayedList.id = nameList;
-    var optionsList = document.querySelectorAll(".option" + currentListName);
+    //displayedList.id = nameList.replace(/ /g, '');
+    var optionsList = document.querySelectorAll(".option" + currentListName.replace(/ /g, ''));
     console.log(optionsList);
     console.log("outside for");
     for (option of optionsList) {
@@ -184,10 +188,13 @@ function changeListName() {
 
 }
 
+
+
 btnRemoveListConfirmed.addEventListener("click", removeList);
 btnCloseConfirmRemove.addEventListener("click", function () {
     toggleConfirmRemoveListWindow();
     toggleRemoveListWindow();
+
 })
 
 
@@ -326,7 +333,7 @@ function displayList(listName) {
     list.classList.add('panel-list');
     list.classList.add('panel-click');
     list.textContent = listName;
-    list.id = listName;
+    // list.id = listName.replace(/ /g, '');
     if (newCustomList.classList.contains("hidden"))
         list.classList.add("hidden")
     list.addEventListener("click", panelClickActive);
@@ -335,7 +342,7 @@ function displayList(listName) {
 
     optionList.value = listName;
 
-    optionList.classList.add("option" + listName);
+    optionList.classList.add("option" + listName.replace(/ /g, ''));
     list.addEventListener("click", chosenList);
 
     //checkCustomList.appendChild(optionList);
@@ -387,11 +394,13 @@ function checkFilter() {
 
 
 function chosenList(event) {
-    var id = event.target.id;
+    var id = event.target.textContent;
     displayTasksFromlist(id);
 }
 
 //var activWindow = document.getElementById("activate-window");
+
+var windowListClosed = true
 
 function displayTasksFromlist(idList) {
 
@@ -404,13 +413,11 @@ function displayTasksFromlist(idList) {
     }
     taskTitle.textContent = idList.toUpperCase();
     taskTitle.dataset.id = idList;
-    titleWrapper.addEventListener("mouseover", showRemoveListWindow)
-    /*activWindow.addEventListener("mouseover", showRemoveListWindow);
-    removeListWindow.addEventListener("mouseout", function () {
-        console.log("mouseleave");
-        removeListWindow.classList.remove("show-info");
-        removeListWindow.classList.add("hidden");
-        removeListWindow.classList.remove("high-z")*/
+    titleWrapper.addEventListener("mouseover", function () {
+
+        if (windowListClosed)
+            showRemoveListWindow();
+    })
 
 }
 
