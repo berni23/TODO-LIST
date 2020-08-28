@@ -31,7 +31,6 @@ var colorsList = ["purple", "green", "yellow", "orange", "grey", "pink", "blue"]
 var btnCreateList = document.getElementById("list-created");
 var btnCancelList = document.getElementById("list-canceled");
 var confirmRemoveListWindow = document.querySelector(".confirm-remove-list-window");
-console.log(confirmRemoveListWindow)
 var btnCloseConfirmRemove = document.getElementById("close-confirm-remove");
 var btnRemoveListConfirmed = document.getElementById("remove-list-confirmed");
 var inputChangeList = document.getElementById("input-changeList");
@@ -159,26 +158,31 @@ function changeListName() {
         return;
     }
 
-    try {
 
-        var index = listNames.findIndex(x == currentListName);
-        listNames[index] = nameList;
-        localStorage.setItem("listNames", JSON.stringify(arrayListNames));
-        toggleListNameWindow();
-        toggleRemoveListWindow();
-        inputList.value = "";
-        message("List successfully created!");
-        clearErrors();
-        var displayedList = document.getElementById(currentListName);
-        displayedList.textContent = nameList;
-        displayedList.id = nameList;
-        localStorage.setItem("listNames", listNames);
-    } catch {
-        message("list could not be renamed");
+    var index = listNames.findIndex(x => x == currentListName);
+    listNames[index] = nameList;
+    localStorage.setItem("listNames", JSON.stringify(listNames));
+    toggleListNameWindow();
+    toggleRemoveListWindow();
+    inputList.value = "";
+    message("List  name successfully modified");
+    clearErrors();
+    var displayedList = document.getElementById(currentListName);
+    displayedList.textContent = nameList;
+    displayedList.id = nameList;
+    var optionsList = document.querySelectorAll(".option" + currentListName);
+    console.log(optionsList);
+    console.log("outside for");
+    for (option of optionsList) {
+        console.log(option.value);
+        option.value = nameList;
+        console.log(option.value);
     }
+    // localStorage.setItem("listNames", JSON.stringify(listNames));
+    checkFilter();
+
 
 }
-
 
 btnRemoveListConfirmed.addEventListener("click", removeList);
 btnCloseConfirmRemove.addEventListener("click", function () {
@@ -306,12 +310,11 @@ function createList() {
 }
 
 function getListNames() {
-    try {
-        var arrayListNames = JSON.parse(localStorage.getItem("listNames"));
-        if (!arrayListNames) arrayListNames = [];
-    } catch {
-        var arrayListNames = [];
-    }
+
+    var arrayListNames = JSON.parse(localStorage.getItem("listNames"));
+    if (!arrayListNames) arrayListNames = [];
+
+
     return arrayListNames;
 }
 
@@ -330,13 +333,25 @@ function displayList(listName) {
         list.classList.add("hidden")
     list.addEventListener("click", panelClickActive);
     sidebarContent.appendChild(list);
-    var optionList = document.createElement('option');
+    var optionList = document.createElement("option");
+
     optionList.value = listName;
+
+    optionList.classList.add = "option" + listName;
     list.addEventListener("click", chosenList);
+
+    checkCustomList.appendChild(optionList);
     dataCustomList.appendChild(optionList);
 }
 
 function displayAllLists() {
+
+    /* checkCustomList = document.getElementById("check-customList");
+     dataCustomList = document.getElementById("data-customList");
+     dataCustomList.innerHTML = "";
+     checkCustomList.innerHTML = "";
+     */
+
     var names = getListNames();
     for (name of names) {
         displayList(name);
@@ -620,7 +635,6 @@ function idTask() {
 //  Functions for toggling between show and hide
 
 function showRemoveListWindow() {
-    console.log("click!")
     if (taskTitle.dataset.id != "null") {
         removeListWindow.classList.add("show-info");
         removeListWindow.classList.remove("hidden");
@@ -639,12 +653,12 @@ function toggleRemoveListWindow() {
 }
 
 function toggleConfirmRemoveListWindow() {
+    confirmRemoveListWindow.classList.toggle("hidden");
     confirmRemoveListWindow.classList.toggle("show-info");
+
 }
 
 function toggleListNameWindow() {
-
-    console.log("fuck off!")
     listNameWindow.classList.toggle("show-info");
     listNameWindow.classList.toggle("high-z");
 }

@@ -57,7 +57,7 @@
         </div>
     </div>-->
 
-    <div class="confirm-remove-list-window">
+    <div class="confirm-remove-list-window hidden">
         <p>When removing the list, all the tasks within it will also be removed, proceed anyway?</p>
         <button id="remove-list-confirmed">Remove list </button>
         <button id="close-confirm-remove">Close</button>
@@ -88,7 +88,7 @@
                 <h4>Completed</h4>
                 <div>
                     <h2 class="task-title">TASK LIST</h2>
-                    <div class="remove-list-window">
+                    <div class="remove-list-window hidden">
                         <div class="btn-title-wrapper">
                             <button id="button-rename-list">Rename list</button>
                             <button id="button-remove-list">Remove list </button>
@@ -132,6 +132,7 @@
                     <li style="margin-top:50px"><label>Custom list:</label>
                         <input list="data-customList" id="select-custom-list" placeholder="Select custom list">
                         <datalist id="data-customList">
+                            <option value="no lists"></option>
                         </datalist>
                     </li>
                     <li><br></li>
@@ -175,7 +176,7 @@
                         </div>
                     </li>
                     <li style="margin-top:50px"><label>Custom list:</label>
-                        <input list="check-customList" id="selected-custom-list">
+                        <input list="check-customList" id="selected-custom-list" placeholder="select a list">
                         <datalist id="check-customList">
                         </datalist>
                     </li>
