@@ -43,7 +43,7 @@ var checkTitle = document.getElementById("check-input-title");
 var checkDescription = document.getElementById("check-description");
 var checkCompleted = document.getElementById("check-completed");
 var checkImportant = document.getElementById("check-important");
-var checkCustomList = document.getElementById("check-customList");
+var checkCustomList = document.getElementById("selected-custom-list");
 var checkColorSelected = document.getElementById("check-task-color");
 var bntSaveChangesTask = document.getElementById("save-changes-task");
 var cancelChangesTasK = document.getElementById("cancel-changes-task");
@@ -313,8 +313,6 @@ function getListNames() {
 
     var arrayListNames = JSON.parse(localStorage.getItem("listNames"));
     if (!arrayListNames) arrayListNames = [];
-
-
     return arrayListNames;
 }
 
@@ -337,20 +335,20 @@ function displayList(listName) {
 
     optionList.value = listName;
 
-    optionList.classList.add = "option" + listName;
+    optionList.classList.add("option" + listName);
     list.addEventListener("click", chosenList);
 
-    checkCustomList.appendChild(optionList);
+    //checkCustomList.appendChild(optionList);
     dataCustomList.appendChild(optionList);
 }
 
 function displayAllLists() {
 
-    /* checkCustomList = document.getElementById("check-customList");
-     dataCustomList = document.getElementById("data-customList");
-     dataCustomList.innerHTML = "";
-     checkCustomList.innerHTML = "";
-     */
+
+    dataCustomList = document.getElementById("data-customList");
+    dataCustomList.innerHTML = "";
+
+
 
     var names = getListNames();
     for (name of names) {
