@@ -7,6 +7,8 @@ ul {
     list-style-type: none;
 }
 
+
+/* HEADER*/
 .main-header {
     display: flex;
     position: relative;
@@ -18,7 +20,6 @@ ul {
     box-shadow: 10px 10px goldenrod;
     padding: 10px 0;
 }
-
 
 .title {
     display: flex;
@@ -32,8 +33,8 @@ ul {
 }
 
 
+/*MAIN*/
 main {
-
     position: absolute;
     display: flex;
     margin-top: 50px;
@@ -42,7 +43,6 @@ main {
 }
 
 .sidebar {
-
     height: 100%;
     width: 130px !important;
     border-radius: 20px;
@@ -58,6 +58,9 @@ main {
     margin-top: 25px;
 }
 
+
+/* TASKS*/
+
 .todo-content {
     height: 100%;
     width: 85%;
@@ -72,16 +75,13 @@ main {
     background-position: center;
 }
 
-
 .task-title {
     color: burlywood;
 }
 
 .btn-title-wrapper {
-
     display: flex;
     flex-direction: column;
-
 
 }
 
@@ -106,9 +106,9 @@ main {
 
 #remove-task,
 #confirm-remove {
-
     color: red;
 }
+
 
 /* Style the buttons that are used to open and close the accordion panel */
 .accordion {
@@ -140,23 +140,17 @@ main {
     transition: .5s;
 }
 
-
-
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active,
 .accordion:hover,
 .custom-list:hover {
-    /*box-shadow: 0 0px 50px 0px rgba(135, 206, 250, 1);*/
     background-color: rgba(135, 206, 250, 0.3);
 }
 
-
 .buttons-wrapper {
-
     display: flex;
     justify-content: space-evenly;
     margin-top: 35px;
-
 }
 
 .task {
@@ -171,7 +165,6 @@ main {
 }
 
 .wrapper-input-complete {
-
     position: absolute;
     left: 0px;
     top: 20px;
@@ -181,17 +174,14 @@ main {
 }
 
 .completed {
-
     text-decoration: line-through;
 }
 
 .important {
-
     font-weight: bold;
 }
 
 .wrapper-input-important {
-
     position: absolute;
     right: 10px;
     top: 20px;
@@ -205,13 +195,11 @@ main {
 }
 
 .task-name {
-
     margin: auto 10%;
     overflow: hidden;
 }
 
 .title-wrapper {
-
     justify-content: space-between;
     color: burlywood;
     margin: 1% 12.5%;
@@ -221,7 +209,6 @@ main {
 }
 
 /* class hidden*/
-
 .hidden {
     display: none !important;
 }
@@ -231,20 +218,19 @@ main {
     right: 20px;
     width: 25px;
     height: 25px;
-
 }
 
+/* Modal*/
 .modal li div {
     margin: 0 50px;
 }
 
 .modal li input {
-
     margin-right: 50px;
 }
 
-/* Modal*/
 
+/* modal class */
 .modal {
     position: fixed;
     left: 0;
@@ -259,14 +245,11 @@ main {
 }
 
 .modal-title {
-
     text-align: center;
     color: burlywood;
 }
 
 /* displayed the modal*/
-
-
 .modal-content {
     position: absolute;
     top: 50%;
@@ -310,7 +293,6 @@ main {
     text-align: start;
 }
 
-
 .close-button {
     float: right;
     width: 1.5rem;
@@ -326,7 +308,6 @@ main {
 }
 
 /* form error */
-
 .error-input {
     color: red;
     border: 2px solid red;
@@ -349,7 +330,7 @@ main {
     margin: auto;
 }
 
-
+/* info window, displayed when 'show-info' class is added to the element*/
 .info-window,
 .remove-window,
 .new-list-window,
@@ -372,7 +353,6 @@ main {
     transition: visibility 0s linear 0.25s, opacity 0.25s linear 0s, transform 0.25s;
 }
 
-
 .show-modal,
 .show-info {
     opacity: 1;
@@ -383,18 +363,15 @@ main {
 }
 
 .remove-list-window {
-
     top: 20%;
     left: 50%;
 }
-
 
 .high-z {
     z-index: 10;
 }
 
 /* searchbar*/
-
 .search-container {
 
     color: burlywood;
@@ -402,14 +379,12 @@ main {
 }
 
 .search-container .iconify {
-
     width: 30px;
     height: 30px;
 
 }
 
 .searchbar {
-
     color: burlywood;
     border: 2px solid burlywood
 }
@@ -425,7 +400,6 @@ main {
     .todo-content {
         width: 75%;
     }
-
 }
 
 @media (max-width: 800px) {
@@ -472,7 +446,6 @@ main {
     }
 }
 
-
 @media (max-height: 700px) {
 
     .todo-content,
@@ -480,7 +453,6 @@ main {
         height: 80%;
     }
 }
-
 
 @media (max-height: 500px) {
 
@@ -490,7 +462,6 @@ main {
     }
 }
 
-
 @media (max-height: 400px) {
 
     .todo-content,
@@ -498,7 +469,6 @@ main {
         height: 65%;
     }
 }
-
 
 @media (max-height: 300px) {
 
