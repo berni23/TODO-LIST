@@ -27,14 +27,12 @@ var inputList = document.getElementById("input-list");
 var infoWindow = document.querySelector(".info-window");
 var newListWindow = document.querySelector(".new-list-window");
 var colorsList = ["purple", "green", "yellow", "orange", "grey", "pink", "blue"];
-
 var btnCreateList = document.getElementById("list-created");
 var btnCancelList = document.getElementById("list-canceled");
 var confirmRemoveListWindow = document.querySelector(".confirm-remove-list-window");
 var btnCloseConfirmRemove = document.getElementById("close-confirm-remove");
 var btnRemoveListConfirmed = document.getElementById("remove-list-confirmed");
 var inputChangeList = document.getElementById("input-changeList");
-
 
 // Modal for checking task info (on task title clicked)
 var checkModal = document.querySelector(".check-modal");
@@ -55,7 +53,6 @@ var confirmRemove = document.getElementById("confirm-remove");
 var cancelRemove = document.getElementById("cancel-remove");
 
 // remove list window
-
 var btnRenameList = document.getElementById("button-rename-list");
 var btnRemoveList = document.getElementById("button-remove-list");
 var btnCloseListWindow = document.getElementById("close-list-window");
@@ -67,6 +64,9 @@ var listCancelName = document.getElementById("list-cancelName");
 // searchbar
 var inputSearch = document.querySelector(".searchbar");
 
+/*----------------------
+Event listeners
+-----------------------*/
 
 newCustomList.addEventListener("click", toggleNewListPanel);
 btnCreateList.addEventListener("click", createList);
@@ -83,35 +83,22 @@ filterTodo.addEventListener("click", displayTODO);
 filterImportant.addEventListener("click", displayImportant);
 filterCompleted.addEventListener("click", displayCompleted);
 
-
 btnCloseListWindow.addEventListener("click", function () {
-
     windowListClosed = false;
     setTimeout(() => windowListClosed = true, 1000);
     toggleRemoveListWindow();
 
 })
 
-
 btnRemoveList.addEventListener("click", toggleConfirmRemoveListWindow);
 btnRenameList.addEventListener("click", toggleListNameWindow);
-
 
 for (let i = 0; i < panelClick.length; i++) {
     panelClick[i].addEventListener("click", panelClickActive);
 }
 
 inputSearch.addEventListener("input", handleSearch);
-
-function panelClickActive(event) {
-    var activeOption = document.querySelector(".active");
-    if (activeOption) activeOption.classList.remove("active");
-    event.target.classList.toggle("active");
-
-}
 customListSelector.addEventListener("click", function () {
-    /* Toggle between adding and removing the "active" class,
-    to highlight the button that controls the panel */
     lists = document.querySelectorAll(".panel-list");
     document.getElementById("caret-down-custom").classList.toggle("hidden");
     document.getElementById("caret-right-custom").classList.toggle("hidden");
@@ -126,7 +113,6 @@ cancelRemove.addEventListener("click", function () {
     toggleConfirmRemoveListWindow();
 });
 confirmRemove.addEventListener("click", removeTask);
-
 closeCheckModal.addEventListener("click", toggleCheckModal);
 bntSaveChangesTask.addEventListener("click", saveChangesTask);
 btnRemoveTask.addEventListener("click", toggleRemoveWindow);
@@ -137,6 +123,16 @@ listCancelName.addEventListener("click", function () {
     toggleListNameWindow();
     toggleRemoveListWindow();
 })
+btnRemoveListConfirmed.addEventListener("click", removeList);
+btnCloseConfirmRemove.addEventListener("click", function () {
+    toggleConfirmRemoveListWindow();
+    toggleRemoveListWindow();
+
+})
+
+/*----------------------------
+initialize list
+ -------------------------- */
 
 initialize();
 
@@ -145,228 +141,9 @@ function initialize() {
     displayAllLists();
 }
 
-function changeListName() {
-
-    var currentListName = taskTitle.dataset.id;
-    clearErrors();
-    var listNames = getListNames();
-    var nameList = inputChangeList.value;
-    if (nameList == "") {
-        inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name can't be blank</p></div>")
-        inputList.classList.add("error-input");
-        return;
-    }
-    if (listNames.includes(nameList)) {
-        inputList.insertAdjacentHTML('beforeBegin', "<div class='error-msg' ><p>List name already exists</p></div>")
-        inputList.classList.add("error-input")
-        return;
-    }
-
-
-    var index = listNames.findIndex(x => x == currentListName);
-    listNames[index] = nameList;
-    localStorage.setItem("listNames", JSON.stringify(listNames));
-    toggleListNameWindow();
-    toggleRemoveListWindow();
-    inputList.value = "";
-    message("List  name successfully modified");
-    clearErrors();
-    var displayedList = document.getElementById(currentListName);
-    displayedList.textContent = nameList;
-    //displayedList.id = nameList.replace(/ /g, '');
-    var optionsList = document.querySelectorAll(".option" + currentListName.replace(/ /g, ''));
-    console.log(optionsList);
-    console.log("outside for");
-    for (option of optionsList) {
-        console.log(option.value);
-        option.value = nameList;
-        console.log(option.value);
-    }
-    // localStorage.setItem("listNames", JSON.stringify(listNames));
-    checkFilter();
-
-
-}
-
-
-
-btnRemoveListConfirmed.addEventListener("click", removeList);
-btnCloseConfirmRemove.addEventListener("click", function () {
-    toggleConfirmRemoveListWindow();
-    toggleRemoveListWindow();
-
-})
-
-
-function removeList() {
-    var tasks = getAll();
-    var listNames = getListNames();
-    var listName = taskTitle.dataset.id;
-
-    for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].list === listName) {
-            tasks.splice(i, 1);
-        }
-    }
-    setAll(tasks);
-    var listIndex = listNames.findIndex(x => listName);
-    listNames.splice(listIndex, 1);
-    setListNames(listNames);
-    document.getElementById(listName).remove();
-    filterTodo.classList.add("active");
-    checkFilter();
-    toggleConfirmRemoveListWindow();
-    toggleRemoveListWindow();
-    message("list sucessfully removed");
-}
-
-
-
-function removeTask() {
-    var id = checkTitle.dataset.id;
-    removeItem(id);
-    checkFilter();
-    message('Task successfully removed');
-    toggleCheckModal();
-    toggleRemoveWindow();
-}
-
-function toggleRemoveWindow() {
-    removeWindow.classList.toggle("show-info");
-}
-
-function showTaskInfo(event) {
-
-    if (event.target.classList.contains("task") || event.target.classList.contains("task-name")) {
-        var id = event.currentTarget.id
-        var task = getItem(id);
-        checkTitle.value = task.title;
-        checkTitle.dataset.id = id;
-        checkDescription.value = task.description;
-        checkCompleted.checked = task.completed;
-        checkImportant.checked = task.important;
-        checkCustomList.value = task.list;
-        if (task.color == 'lightblue')
-            checkColorSelected.value = "";
-        else
-            checkColorSelected.value = task.color;
-        toggleCheckModal();
-    }
-}
-
-function saveChangesTask() {
-
-    if (validateUpdate()) {
-        var id = checkTitle.dataset.id;
-        var task = getItem(id);
-        task.title = checkTitle.value;
-        task.description = checkDescription.value
-        task.completed = checkCompleted.checked;
-        task.important = checkImportant.checked;
-        task.list = checkCustomList.value;
-        task.color = checkColorSelected.value;
-        setItem(task);
-        toggleCheckModal();
-        checkFilter();
-        message("task sucessfully updated!");
-    }
-}
-
-
-function handleSearch(event) {
-
-    clearPanel();
-
-    var inputText = event.target.value.trim().toLowerCase();
-    var tasks = getAll();
-
-    for (task of tasks) {
-        var title = task.title.trim().toLowerCase();
-        if (title.startsWith(inputText)) {
-
-            displayTask(task);
-        }
-
-    }
-
-}
-
-function createList() {
-
-    var listNameRegEx = /\b.{1,25}\b/ //  whatever between 1 and 25 chars
-    clearErrors();
-    var arrayListNames = getListNames();
-    var nameList = inputList.value;
-    if (!listNameRegEx.test(nameList)) {
-        inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name must be between 1 and 25 characters</p></div>")
-        inputList.classList.add("error-input");
-        return;
-    }
-    if (arrayListNames.includes(nameList)) {
-        inputList.insertAdjacentHTML('beforeBegin', "<div class='error-msg' ><p>List name already exists</p></div>")
-        inputList.classList.add("error-input")
-        return;
-    }
-    arrayListNames.push(nameList);
-    localStorage.setItem("listNames", JSON.stringify(arrayListNames));
-    toggleNewListPanel();
-    inputList.value = "";
-    message("List successfully created!");
-    clearErrors();
-    displayList(nameList);
-}
-
-function getListNames() {
-
-    var arrayListNames = JSON.parse(localStorage.getItem("listNames"));
-    if (!arrayListNames) arrayListNames = [];
-    return arrayListNames;
-}
-
-function setListNames(arrayListNames) {
-    localStorage.setItem("listNames", JSON.stringify(arrayListNames));
-}
-
-function displayList(listName) {
-    var list = document.createElement('div');
-    list.classList.add('panel');
-    list.classList.add('panel-list');
-    list.classList.add('panel-click');
-    list.textContent = listName;
-    // list.id = listName.replace(/ /g, '');
-    if (newCustomList.classList.contains("hidden"))
-        list.classList.add("hidden")
-    list.addEventListener("click", panelClickActive);
-    sidebarContent.appendChild(list);
-    var optionList = document.createElement("option");
-
-    optionList.value = listName;
-
-    optionList.classList.add("option" + listName.replace(/ /g, ''));
-    list.addEventListener("click", chosenList);
-
-    //checkCustomList.appendChild(optionList);
-    dataCustomList.appendChild(optionList);
-}
-
-function displayAllLists() {
-
-
-    dataCustomList = document.getElementById("data-customList");
-    dataCustomList.innerHTML = "";
-
-
-
-    var names = getListNames();
-    for (name of names) {
-        displayList(name);
-    }
-}
-
-function toggleNewListPanel() {
-    newListWindow.classList.toggle("show-info");
-}
-
+/*----------------------------------------
+check which filter is active ( important, completed, to do , or a custom list )
+------------------------------------*/
 
 function checkFilter() {
     var filterId = document.querySelector(".active").id;
@@ -391,35 +168,9 @@ function checkFilter() {
     }
 }
 
-
-
-function chosenList(event) {
-    var id = event.target.textContent;
-    displayTasksFromlist(id);
-}
-
-//var activWindow = document.getElementById("activate-window");
-
-var windowListClosed = true
-
-function displayTasksFromlist(idList) {
-
-    clearPanel();
-    var tasks = getAll();
-    for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].list == idList && !tasks[i].completed) {
-            displayTask(tasks[i]);
-        }
-    }
-    taskTitle.textContent = idList.toUpperCase();
-    taskTitle.dataset.id = idList;
-    titleWrapper.addEventListener("mouseover", function () {
-
-        if (windowListClosed)
-            showRemoveListWindow();
-    })
-
-}
+/*-----------------------------------------------------------
+Apply the different filters, controlled by  the 'checkFilter' function
+------------------------------------------------------------*/
 
 function displayTODO() {
     clearPanel();
@@ -461,12 +212,89 @@ function displayImportant() {
     titleWrapper.removeEventListener("click", showRemoveListWindow);
 }
 
+var windowListClosed = true
 
+function displayTasksFromlist(idList) {
+
+    clearPanel();
+    var tasks = getAll();
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].list == idList && !tasks[i].completed) {
+            displayTask(tasks[i]);
+        }
+    }
+    taskTitle.textContent = idList.toUpperCase();
+    taskTitle.dataset.id = idList;
+    titleWrapper.addEventListener("mouseover", function () {
+
+        if (windowListClosed)
+            showRemoveListWindow();
+    })
+
+}
+/* ---------------------
+Search tasks
+----------------------*/
+
+function handleSearch(event) {
+    clearPanel();
+    var inputText = event.target.value.trim().toLowerCase();
+    var tasks = getAll();
+
+    for (task of tasks) {
+        var title = task.title.trim().toLowerCase();
+        if (title.startsWith(inputText)) {
+
+            displayTask(task);
+        }
+    }
+}
+
+/* -------------------------
+Task logic
+-------------------------*/
+
+// Display a task
+function displayTask(task) {
+    var elemTask = document.createElement('div');
+    elemTask.id = task.id;
+    elemTask.classList.add('task');
+    elemTask.style.borderColor = task.color;
+    var complete = document.createElement('div');
+    complete.classList.add("wrapper-input-complete");
+    var inputComplete = document.createElement("input");
+    inputComplete.type = "checkbox";
+    inputComplete.classList.add("input-complete");
+    inputComplete.addEventListener("change", setComplete)
+    inputComplete.checked = task.completed;
+    complete.appendChild(inputComplete);
+    var taskName = document.createElement('span');
+    taskName.classList.add('task-name');
+    taskName.textContent = task.title;
+    elemTask.addEventListener("click", showTaskInfo);
+    var important = document.createElement('div');
+    important.classList.add('wrapper-input-important');
+    var inputImportant = document.createElement("input");
+    inputImportant.type = "checkbox";
+    inputImportant.classList.add("input-important");
+    inputImportant.addEventListener("change", setImportant)
+    inputImportant.checked = task.important;
+    important.appendChild(inputImportant);
+    elemTask.appendChild(complete);
+    elemTask.appendChild(taskName);
+    elemTask.appendChild(important);
+    if (inputComplete.checked) elemTask.classList.add("completed");
+    if (inputImportant.checked) elemTask.classList.add("important");
+    taskWrapper.appendChild(elemTask);
+}
+
+// cancel task
 function cancelTask() {
     toggleModal();
     resetForm();
 }
 
+// submit task
 function submitTask() {
     if (validate()) {
         var newTask = createTask();
@@ -484,51 +312,7 @@ function submitTask() {
     }
 }
 
-function setItem(item) {
-    var tasks = getAll();
-    var index = tasks.findIndex(x => x.id === item.id);
-    if (index === -1) tasks.push(item);
-    else tasks[index] = item
-    localStorage.setItem('todo', JSON.stringify(tasks));
-
-}
-
-function getItem(id) {
-    var tasks = getAll();
-    var item;
-    for (elem of tasks) {
-        if (elem.id == id) item = elem;
-    }
-    return item;
-}
-
-
-function removeItem(id) {
-
-    var tasks = getAll();
-    var index = tasks.findIndex(x => x.id === id);
-    tasks.splice(index, 1);
-    localStorage.setItem('todo', JSON.stringify(tasks));
-
-}
-
-function getAll() {
-    try {
-        var tasks = JSON.parse(localStorage.getItem('todo'));
-        if (!tasks) {
-            tasks = [];
-        }
-    } catch {
-        var tasks = [];
-    }
-    return tasks;
-
-}
-
-function setAll(tasks) {
-    localStorage.setItem('todo', JSON.stringify(tasks))
-}
-
+// create task object
 function createTask() {
     var colorChosen = inputColor.value ? inputColor.value : 'lightblue'; //#add8e6';
     return {
@@ -542,157 +326,7 @@ function createTask() {
     }
 }
 
-function displayTask(task) {
-    var elemTask = document.createElement('div');
-    elemTask.id = task.id;
-    elemTask.classList.add('task');
-    elemTask.style.borderColor = task.color;
-    var complete = document.createElement('div');
-    complete.classList.add("wrapper-input-complete");
-    var inputComplete = document.createElement("input");
-    inputComplete.type = "checkbox";
-    inputComplete.classList.add("input-complete");
-    inputComplete.addEventListener("change", setComplete)
-    inputComplete.checked = task.completed;
-    complete.appendChild(inputComplete);
-
-    var taskName = document.createElement('span');
-    taskName.classList.add('task-name');
-    taskName.textContent = task.title;
-
-    elemTask.addEventListener("click", showTaskInfo);
-    var important = document.createElement('div');
-    important.classList.add('wrapper-input-important');
-    var inputImportant = document.createElement("input");
-    inputImportant.type = "checkbox";
-    inputImportant.classList.add("input-important");
-    inputImportant.addEventListener("change", setImportant)
-    inputImportant.checked = task.important;
-    important.appendChild(inputImportant);
-
-    elemTask.appendChild(complete);
-    elemTask.appendChild(taskName);
-    elemTask.appendChild(important);
-
-    if (inputComplete.checked) elemTask.classList.add("completed");
-    if (inputImportant.checked) elemTask.classList.add("important");
-    taskWrapper.appendChild(elemTask);
-
-}
-
-function setImportant(event) {
-    var id = event.target.parentElement.parentElement.id;
-    var task = getItem(id);
-    if (event.target.checked) task.important = true;
-    else task.important = false;
-    setItem(task);
-    checkFilter();
-    checkModal.classList.remove("show-modal");
-
-}
-
-function setComplete(event) {
-    var id = event.target.parentElement.parentElement.id;
-    var task = getItem(id);
-    if (event.target.checked) task.completed = true;
-    else task.completed = false;
-    setItem(task);
-    checkFilter();
-}
-
-function clearPanel() {
-    taskWrapper.innerHTML = "";
-}
-
-function resetForm() {
-    inputTitle.value = "";
-    inputDescription.value = "";
-    inputImportant.checked = false;
-    inputCompleted.checked = false;
-}
-
-
-function clearErrors() {
-    var errorMsg = document.querySelectorAll(".error-msg");
-    var errorInput = document.querySelectorAll(".error-input");
-    for (div of errorMsg) {
-        div.remove();
-    }
-    for (div of errorInput) {
-        div.classList.remove("error-input");
-    }
-}
-
-function message(msg) {
-    infoWindow.textContent = msg;
-    toggleInfoWindow();
-    setTimeout(toggleInfoWindow, 1500);
-}
-
-function idTask() {
-    var id = Math.floor(Math.random() * Math.floor(10000000)); // 1 in ten millions
-    if (getItem(id)) {
-        idTask();
-    } else {
-        return id;
-    }
-}
-//  Functions for toggling between show and hide
-
-function showRemoveListWindow() {
-    if (taskTitle.dataset.id != "null") {
-        removeListWindow.classList.add("show-info");
-        removeListWindow.classList.remove("hidden");
-        removeListWindow.classList.add("high-z");;
-    }
-}
-
-function toggleCheckModal() {
-    checkModal.classList.toggle("show-info");
-}
-
-
-function toggleRemoveListWindow() {
-    removeListWindow.classList.toggle("show-info");
-    removeListWindow.classList.toggle("hidden")
-}
-
-function toggleConfirmRemoveListWindow() {
-    confirmRemoveListWindow.classList.toggle("hidden");
-    confirmRemoveListWindow.classList.toggle("show-info");
-
-}
-
-function toggleListNameWindow() {
-    listNameWindow.classList.toggle("show-info");
-    listNameWindow.classList.toggle("high-z");
-}
-
-
-function toggleInfoWindow() {
-    infoWindow.classList.toggle("show-info");
-}
-
-function toggleModal() {
-    modal.classList.toggle("show-modal");
-}
-
-function windowOnClick() {
-    modal.classList.remove("show-modal");
-}
-
-function handleKeyDown(event) {
-    if (event.keyCodioe === 27) { // hide modal on esc key pressed
-        modal.classList.remove("show-modal");
-    }
-}
-
-/*
-----------------------------------
-Validation functions
-----------------------------------
-*/
-
+// validate task inputs
 function validate() {
     let validation = true;
     var TitleRegEx = /\b.{3,50}\b/ //  whatever between 3 and 50 chars
@@ -737,6 +371,264 @@ function validate() {
     return validation; // true if validation passed, else false
 }
 
+/* ---------------------------
+List logic
+-----------------------------*/
+
+// create a list
+function createList() {
+
+    var listNameRegEx = /\b.{1,25}\b/ //  whatever between 1 and 25 chars
+    clearErrors();
+    var arrayListNames = getListNames();
+    var nameList = inputList.value;
+    if (!listNameRegEx.test(nameList)) {
+        inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name must be between 1 and 25 characters</p></div>")
+        inputList.classList.add("error-input");
+        return;
+    }
+    if (arrayListNames.includes(nameList)) {
+        inputList.insertAdjacentHTML('beforeBegin', "<div class='error-msg' ><p>List name already exists</p></div>")
+        inputList.classList.add("error-input")
+        return;
+    }
+    arrayListNames.push(nameList);
+    localStorage.setItem("listNames", JSON.stringify(arrayListNames));
+    toggleNewListPanel();
+    inputList.value = "";
+    message("List successfully created!");
+    clearErrors();
+    displayList(nameList);
+}
+
+function chosenList(event) {
+    var id = event.target.textContent;
+    displayTasksFromlist(id);
+}
+
+// Display a list on the sidebar
+function displayList(listName) {
+    var list = document.createElement('div');
+    list.classList.add('panel');
+    list.classList.add('panel-list');
+    list.classList.add('panel-click');
+    list.textContent = listName;
+    if (newCustomList.classList.contains("hidden"))
+        list.classList.add("hidden")
+    list.addEventListener("click", panelClickActive);
+    sidebarContent.appendChild(list);
+    var optionList = document.createElement("option");
+
+    optionList.value = listName;
+    optionList.classList.add("option" + listName.replace(/ /g, ''));
+    list.addEventListener("click", chosenList);
+    dataCustomList.appendChild(optionList);
+}
+
+// display all lists on the sidebar
+function displayAllLists() {
+    dataCustomList = document.getElementById("data-customList");
+    dataCustomList.innerHTML = "";
+    var names = getListNames();
+    for (name of names) {
+        displayList(name);
+    }
+}
+
+// change list name
+function changeListName() {
+    var currentListName = taskTitle.dataset.id;
+    clearErrors();
+    var listNames = getListNames();
+    var nameList = inputChangeList.value;
+    if (nameList == "") {
+        inputList.insertAdjacentHTML('beforeBegin', "<div style ='margin-right:100px; width:150px' class='error-msg' ><p>List name can't be blank</p></div>")
+        inputList.classList.add("error-input");
+        return;
+    }
+    if (listNames.includes(nameList)) {
+        inputList.insertAdjacentHTML('beforeBegin', "<div class='error-msg' ><p>List name already exists</p></div>")
+        inputList.classList.add("error-input")
+        return;
+    }
+    var index = listNames.findIndex(x => x == currentListName);
+    listNames[index] = nameList;
+    localStorage.setItem("listNames", JSON.stringify(listNames));
+    toggleListNameWindow();
+    toggleRemoveListWindow();
+    inputList.value = "";
+    message("List  name successfully modified");
+    clearErrors();
+    var displayedList = document.getElementById(currentListName);
+    displayedList.textContent = nameList;
+    var optionsList = document.querySelectorAll(".option" + currentListName.replace(/ /g, ''));
+    console.log(optionsList);
+    console.log("outside for");
+    for (option of optionsList) {
+        console.log(option.value);
+        option.value = nameList;
+        console.log(option.value);
+    }
+    checkFilter();
+}
+
+// remove list
+function removeList() {
+    var tasks = getAll();
+    var listNames = getListNames();
+    var listName = taskTitle.dataset.id;
+
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].list === listName) {
+            tasks.splice(i, 1);
+        }
+    }
+    setAll(tasks);
+    var listIndex = listNames.findIndex(x => listName);
+    listNames.splice(listIndex, 1);
+    setListNames(listNames);
+    document.getElementById(listName).remove();
+    filterTodo.classList.add("active");
+    checkFilter();
+    toggleConfirmRemoveListWindow();
+    toggleRemoveListWindow();
+    message("list sucessfully removed");
+}
+
+/*------------------------------
+LocalStorage
+-----------------------------*/
+
+// set and get tasks
+function setItem(item) {
+    var tasks = getAll();
+    var index = tasks.findIndex(x => x.id === item.id);
+    if (index === -1) tasks.push(item);
+    else tasks[index] = item
+    localStorage.setItem('todo', JSON.stringify(tasks));
+
+}
+
+function getItem(id) {
+    var tasks = getAll();
+    var item;
+    for (elem of tasks) {
+        if (elem.id == id) item = elem;
+    }
+    return item;
+}
+
+// remove a task
+function removeItem(id) {
+    var tasks = getAll();
+    var index = tasks.findIndex(x => x.id === id);
+    tasks.splice(index, 1);
+    localStorage.setItem('todo', JSON.stringify(tasks));
+}
+
+// get array of tasks
+function getAll() {
+    try {
+        var tasks = JSON.parse(localStorage.getItem('todo'));
+        if (!tasks) {
+            tasks = [];
+        }
+    } catch {
+        var tasks = [];
+    }
+    return tasks;
+}
+
+// set array of tasks
+function setAll(tasks) {
+    localStorage.setItem('todo', JSON.stringify(tasks))
+}
+
+// change the property important of a task and update in in localStorage
+function setImportant(event) {
+    var id = event.target.parentElement.parentElement.id;
+    var task = getItem(id);
+    if (event.target.checked) task.important = true;
+    else task.important = false;
+    setItem(task);
+    checkFilter();
+    checkModal.classList.remove("show-modal");
+
+}
+
+// change the property complete of a task and update in in localStorage
+function setComplete(event) {
+    var id = event.target.parentElement.parentElement.id;
+    var task = getItem(id);
+    if (event.target.checked) task.completed = true;
+    else task.completed = false;
+    setItem(task);
+    checkFilter();
+}
+
+// get and set listnames
+function getListNames() {
+    var arrayListNames = JSON.parse(localStorage.getItem("listNames"));
+    if (!arrayListNames) arrayListNames = [];
+    return arrayListNames;
+}
+
+function setListNames(arrayListNames) {
+    localStorage.setItem("listNames", JSON.stringify(arrayListNames));
+}
+
+/*-------------------------
+Task updating logic
+---------------------------*/
+
+// open a modal where task info is displayed
+function showTaskInfo(event) {
+    if (event.target.classList.contains("task") || event.target.classList.contains("task-name")) {
+        var id = event.currentTarget.id
+        var task = getItem(id);
+        checkTitle.value = task.title;
+        checkTitle.dataset.id = id;
+        checkDescription.value = task.description;
+        checkCompleted.checked = task.completed;
+        checkImportant.checked = task.important;
+        checkCustomList.value = task.list;
+        if (task.color == 'lightblue')
+            checkColorSelected.value = "";
+        else
+            checkColorSelected.value = task.color;
+        toggleCheckModal();
+    }
+}
+
+// save  changes on task properties
+function saveChangesTask() {
+    if (validateUpdate()) {
+        var id = checkTitle.dataset.id;
+        var task = getItem(id);
+        task.title = checkTitle.value;
+        task.description = checkDescription.value
+        task.completed = checkCompleted.checked;
+        task.important = checkImportant.checked;
+        task.list = checkCustomList.value;
+        task.color = checkColorSelected.value;
+        setItem(task);
+        toggleCheckModal();
+        checkFilter();
+        message("task sucessfully updated!");
+    }
+}
+
+// remove a task
+function removeTask() {
+    var id = checkTitle.dataset.id;
+    removeItem(id);
+    checkFilter();
+    message('Task successfully removed');
+    toggleCheckModal();
+    toggleRemoveWindow();
+}
+
+// validate task updating
 function validateUpdate() {
     let validation = true;
     var TitleRegEx = /\b.{3,50}\b/ //  whatever between 3 and 50 chars
@@ -776,4 +668,109 @@ function validateUpdate() {
         validation = false
     }
     return validation; // true if validation passed, else false
+}
+
+/*--------------------------------------------
+Functions for toggling between show and hide
+---------------------------------------------*/
+
+function panelClickActive(event) {
+    var activeOption = document.querySelector(".active");
+    if (activeOption) activeOption.classList.remove("active");
+    event.target.classList.toggle("active");
+
+}
+
+function showRemoveListWindow() {
+    if (taskTitle.dataset.id != "null") {
+        removeListWindow.classList.add("show-info");
+        removeListWindow.classList.remove("hidden");
+        removeListWindow.classList.add("high-z");;
+    }
+}
+
+function toggleNewListPanel() {
+    newListWindow.classList.toggle("show-info");
+}
+
+function toggleRemoveWindow() {
+    removeWindow.classList.toggle("show-info");
+}
+
+function toggleCheckModal() {
+    checkModal.classList.toggle("show-info");
+}
+
+function toggleRemoveListWindow() {
+    removeListWindow.classList.toggle("show-info");
+    removeListWindow.classList.toggle("hidden")
+}
+
+function toggleConfirmRemoveListWindow() {
+    confirmRemoveListWindow.classList.toggle("hidden");
+    confirmRemoveListWindow.classList.toggle("show-info");
+}
+
+function toggleListNameWindow() {
+    listNameWindow.classList.toggle("show-info");
+    listNameWindow.classList.toggle("high-z");
+}
+
+function toggleInfoWindow() {
+    infoWindow.classList.toggle("show-info");
+}
+
+function toggleModal() {
+    modal.classList.toggle("show-modal");
+}
+
+function windowOnClick() {
+    modal.classList.remove("show-modal");
+}
+
+function handleKeyDown(event) {
+    if (event.keyCodioe === 27) { // hide modal on esc key pressed
+        modal.classList.remove("show-modal");
+    }
+}
+/*-------------------------
+Utilities
+-----------------------*/
+
+// clear task panel
+function clearPanel() {
+    taskWrapper.innerHTML = "";
+}
+// reset form
+function resetForm() {
+    inputTitle.value = "";
+    inputDescription.value = "";
+    inputImportant.checked = false;
+    inputCompleted.checked = false;
+}
+// clear form errors
+function clearErrors() {
+    var errorMsg = document.querySelectorAll(".error-msg");
+    var errorInput = document.querySelectorAll(".error-input");
+    for (div of errorMsg) {
+        div.remove();
+    }
+    for (div of errorInput) {
+        div.classList.remove("error-input");
+    }
+}
+// display a message to the user
+function message(msg) {
+    infoWindow.textContent = msg;
+    toggleInfoWindow();
+    setTimeout(toggleInfoWindow, 1500);
+}
+// create a random id for the tasks
+function idTask() {
+    var id = Math.floor(Math.random() * Math.floor(10000000)); // 1 in ten millions
+    if (getItem(id)) {
+        idTask();
+    } else {
+        return id;
+    }
 }
