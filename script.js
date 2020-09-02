@@ -2,9 +2,9 @@ var sidebarContent = document.querySelector(".sidebar-content")
 var customListSelector = document.querySelector(".custom-list");
 var dataCustomList = document.getElementById("data-customList");
 var lists = document.querySelectorAll(".panel-list");
+var taskTitle = document.querySelector(".task-title");
 var panelClick = document.getElementsByClassName("panel-click");
 var panelTask = document.getElementsByClassName("panel-task");
-var taskTitle = document.querySelector(".task-title");
 var btnTitleWrapper = document.querySelector(".btn-title-wrapper");
 var titleWrapper = document.querySelector(".title-wrapper")
 var filterTodo = document.getElementById("filter-todo");
@@ -130,9 +130,9 @@ btnCloseConfirmRemove.addEventListener("click", function () {
 
 })
 
-/*----------------------------
+/*-----------------------------
 initialize list
- -------------------------- */
+ ----------------------------- */
 
 initialize();
 
@@ -176,7 +176,7 @@ function displayTODO() {
     clearPanel();
     var tasks = getAll();
     for (let i = 0; i < tasks.length; i++) {
-        if (!tasks[i].completed && !tasks[i].important && !tasks[i].list) {
+        if (!tasks[i].completed && !tasks[i].list) {
             displayTask(tasks[i]);
         }
     }
@@ -217,6 +217,8 @@ var windowListClosed = true
 function displayTasksFromlist(idList) {
 
     clearPanel();
+
+    console.log(idList);
     var tasks = getAll();
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].list == idList && !tasks[i].completed) {
@@ -411,6 +413,7 @@ function displayList(listName) {
     var list = document.createElement('div');
     list.classList.add('panel');
     list.classList.add('panel-list');
+    list.id = listName
     list.classList.add('panel-click');
     list.textContent = listName;
     if (newCustomList.classList.contains("hidden"))
@@ -476,9 +479,12 @@ function changeListName() {
 function removeList() {
     var tasks = getAll();
     var listNames = getListNames();
+    taskTitle = document.querySelector(".task-title");
     var listName = taskTitle.dataset.id;
+    var anotherName = taskTitle.textContent;
 
-    //console.log(listName);
+    console.log('nameInside', anotherName);
+    console.log('listname', listName);
 
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].list === listName) {
@@ -497,9 +503,9 @@ function removeList() {
     message("list sucessfully removed");
 }
 
-/*------------------------------
+/*--------------------
 LocalStorage
------------------------------*/
+---------------------*/
 
 // set and get tasks
 function setItem(item) {
