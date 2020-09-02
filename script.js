@@ -217,8 +217,7 @@ var windowListClosed = true
 function displayTasksFromlist(idList) {
 
     clearPanel();
-
-    console.log(idList);
+    console.log('taskFromListDisplayed', idList);
     var tasks = getAll();
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].list == idList && !tasks[i].completed) {
@@ -227,6 +226,8 @@ function displayTasksFromlist(idList) {
     }
     taskTitle.textContent = idList.toUpperCase();
     taskTitle.dataset.id = idList;
+    console.log(taskTitle);
+
     titleWrapper.addEventListener("mouseover", function () {
 
         if (windowListClosed)
@@ -369,7 +370,6 @@ function validate() {
         inputColor.classList.add("error-input");
         validation = false
     }
-
     return validation; // true if validation passed, else false
 }
 
@@ -441,6 +441,7 @@ function displayAllLists() {
 // change list name
 function changeListName() {
     var currentListName = taskTitle.dataset.id;
+    console.log(currentListName)
     clearErrors();
     var listNames = getListNames();
     var nameList = inputChangeList.value;
@@ -464,15 +465,13 @@ function changeListName() {
     clearErrors();
     var displayedList = document.getElementById(currentListName);
     displayedList.textContent = nameList;
+    displayedList.id = nameList
     var optionsList = document.querySelectorAll(".option" + currentListName.replace(/ /g, ''));
-    console.log(optionsList);
-    console.log("outside for");
     for (option of optionsList) {
-        console.log(option.value);
         option.value = nameList;
-        console.log(option.value);
     }
-    checkFilter();
+
+    displayTasksFromlist(nameList);
 }
 
 // remove list
@@ -495,12 +494,18 @@ function removeList() {
     var listIndex = listNames.findIndex(x => listName);
     listNames.splice(listIndex, 1);
     setListNames(listNames);
-    document.getElementById(listName).remove();
+
+    try {
+        document.getElementById(listName).remove();
+        message("list sucessfully removed");
+    } catch (error) {
+        message("list could not be removed")
+    }
     filterTodo.classList.add("active");
     checkFilter();
     toggleConfirmRemoveListWindow();
     toggleRemoveListWindow();
-    message("list sucessfully removed");
+
 }
 
 /*--------------------
