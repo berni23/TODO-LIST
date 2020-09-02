@@ -478,6 +478,8 @@ function removeList() {
     var listNames = getListNames();
     var listName = taskTitle.dataset.id;
 
+    //console.log(listName);
+
     for (let i = 0; i < tasks.length; i++) {
         if (tasks[i].list === listName) {
             tasks.splice(i, 1);
